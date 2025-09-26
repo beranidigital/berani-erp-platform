@@ -86,7 +86,7 @@
 			<!-- Copyright Section -->
 			<div class="flex flex-col justify-between pt-8 mt-8 border-t border-gray-200 md:flex-row">
 				<div class="text-sm text-gray-600">
-					Copyright © <a href="https://aureuserp.com/" class="text-primary-500" target="_blank">AureusERP</a>
+					Copyright © <a href="https://wiki.beranidigital.id/" class="text-primary-500" target="_blank">BeraniERP</a>
 				</div>
 
 				<div class="mt-2 text-sm text-gray-600 md:mt-0">

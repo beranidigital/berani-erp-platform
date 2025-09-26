@@ -33,15 +33,14 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->favicon(asset('images/favicon.ico'))
-            ->brandLogo(asset('images/logo-light.svg'))
-            ->darkModeBrandLogo(asset('images/logo-dark.svg'))
+            ->favicon(asset('images/berani.ico'))
+            ->brandLogo(asset('images/berani-logo.svg'))
             ->brandLogoHeight('2rem')
             ->passwordReset()
             ->emailVerification()
             ->profile()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Red,
             ])
             ->unsavedChangesAlerts()
             // ->spa()

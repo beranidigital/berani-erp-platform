@@ -29,8 +29,8 @@ class CustomerPanelProvider extends PanelProvider
             ->passwordReset()
             ->registration()
             ->profile(isSimple: false)
-            ->favicon(asset('images/favicon.ico'))
-            ->brandLogo(asset('images/logo-light.svg'))
+            ->favicon(asset('images/berani.ico'))
+            ->brandLogo(asset('images/berani-logo.svg'))
             ->darkMode(false)
             ->brandLogoHeight('2rem')
             ->colors([
