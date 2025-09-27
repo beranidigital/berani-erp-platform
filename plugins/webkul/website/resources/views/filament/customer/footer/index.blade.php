@@ -1,4 +1,4 @@
-  <footer class="px-6 py-12 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-100">
+  <footer class="px-6 py-12 bg-black">
 		<div class="container max-w-6xl mx-auto">
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
 				<!-- Logo and Description Column -->
@@ -40,7 +40,7 @@
 
 						@if (isset($contacts['email']))
 							<div class="mb-2">
-								<a href="mailto:{{ $contacts['email'] }}" class="flex items-center text-gray-700 hover:text-primary-600">
+								<a href="mailto:{{ $contacts['email'] }}" class="flex items-center text-white hover:text-blue-200">
 									<x-filament::icon
 										icon="heroicon-m-envelope"
 										class="w-5 h-5 mr-2"
@@ -53,7 +53,7 @@
 
 						@if (isset($contacts['phone']))
 							<div class="mb-6">
-								<a href="tel:{{ $contacts['phone'] }}" class="flex items-center text-gray-700 hover:text-primary-600">
+								<a href="tel:{{ $contacts['phone'] }}" class="flex items-center text-white hover:text-blue-200">
 									<x-filament::icon
 										icon="heroicon-m-phone"
 										class="w-5 h-5 mr-2"
@@ -72,7 +72,7 @@
 							@foreach ($socialLinks as $item)
 								<a
 									href="{{ $item->getUrl() }}"
-									class="p-2 text-white bg-gray-800 rounded-full hover:bg-primary-600"
+									class="p-2 text-white bg-[#B21518] rounded-full hover:bg-[#d62b2f]"
 									target="_blank"
 								>
                                     {!! $item->getIcon() !!}
@@ -86,12 +86,11 @@
 			<!-- Copyright Section -->
 			<div class="flex flex-col justify-between pt-8 mt-8 border-t border-gray-200 md:flex-row">
 				<div class="text-sm text-gray-600">
-					Copyright © <a href="https://wiki.beranidigital.id/" class="text-primary-500" target="_blank">BeraniERP</a>
+					Copyright © <a href="https://wiki.beranidigital.id/" class="text-blue-600 hover:text-blue-400" target="_blank">BeraniERP</a>
 				</div>
 
-				<div class="mt-2 text-sm text-gray-600 md:mt-0">
-					Powered by : <a href="https://webkul.com/" class="text-primary-500" target="_blank">Webkul Software</a>
-				</div>
 			</div>
 		</div>
   </footer>
+
+

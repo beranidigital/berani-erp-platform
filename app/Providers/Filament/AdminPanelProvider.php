@@ -36,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/berani.ico'))
             ->brandLogo(asset('images/berani-logo.svg'))
             ->brandLogoHeight('2rem')
+            ->viteTheme('resources/css/filament/theme.css')
             ->passwordReset()
             ->emailVerification()
             ->profile()
@@ -94,3 +95,4 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
+
