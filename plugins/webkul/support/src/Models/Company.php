@@ -12,6 +12,7 @@ use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 use Webkul\Chatter\Traits\HasChatter;
 use Webkul\Field\Traits\HasCustomFields;
+use Webkul\Partner\Enums\AccountType;
 use Webkul\Partner\Models\Partner;
 use Webkul\Security\Models\User;
 use Webkul\Support\Database\Factories\CompanyFactory;
@@ -150,6 +151,7 @@ class Company extends Model implements Sortable
         static::creating(function ($company) {
             if (! $company->partner_id) {
                 $partner = Partner::create([
+                    'account_type'      => AccountType::COMPANY->value,
                     'creator_id'       => $company->creator_id ?? Auth::id(),
                     'sub_type'         => 'company',
                     'company_registry' => $company->registration_number,
@@ -179,6 +181,7 @@ class Company extends Model implements Sortable
                 [
                     'id' => $company->partner_id,
                 ], [
+                    'account_type'      => AccountType::COMPANY->value,
                     'creator_id'       => $company->creator_id ?? Auth::id(),
                     'sub_type'         => 'company',
                     'company_registry' => $company->registration_number,
