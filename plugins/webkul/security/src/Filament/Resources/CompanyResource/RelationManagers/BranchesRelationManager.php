@@ -331,9 +331,8 @@ class BranchesRelationManager extends RelationManager
                 SelectFilter::make('country')
                     ->label(__('security::filament/resources/company/relation-managers/manage-branch.table.filters.country'))
                     ->multiple()
-                    ->options(function () {
-                        return Country::pluck('name', 'name');
-                    }),
+                    ->relationship('country', 'name')
+                    ->searchable(),
             ])
             ->filtersFormColumns(2)
             ->recordActions([

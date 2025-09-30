@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Auth\AdminLogin::class)
             ->favicon(asset('images/berani.ico'))
             ->brandLogo(asset('images/berani-logo.svg'))
             ->brandLogoHeight('2rem')

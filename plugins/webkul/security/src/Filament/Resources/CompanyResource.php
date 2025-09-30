@@ -369,9 +369,8 @@ class CompanyResource extends Resource
                 SelectFilter::make('country')
                     ->label(__('security::filament/resources/company.table.filters.country'))
                     ->multiple()
-                    ->options(function () {
-                        return Country::pluck('name', 'name');
-                    }),
+                    ->relationship('country', 'name')
+                    ->searchable(),
             ])
             ->filtersFormColumns(2)
             ->recordActions([

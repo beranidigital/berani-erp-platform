@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -42,6 +43,12 @@ class TeamResource extends Resource
                     ->label(__('security::filament/resources/team.form.fields.name'))
                     ->required()
                     ->maxLength(255),
+                Textarea::make('description')
+                    // ->label(__('security::filament/resources/team.form.field.description'))
+                    ->label('Description')
+                    ->required()
+                    ->rows(4)
+                    ->maxLength(65535),
             ]);
     }
 
@@ -52,6 +59,11 @@ class TeamResource extends Resource
                 TextColumn::make('name')
                     ->label(__('security::filament/resources/team.table.columns.name'))
                     ->searchable()
+                    ->limit(50)
+                    ->sortable(),
+                TextColumn::make('description')
+                    // ->label(__('security::filament/resources/team.table.columns.description'))
+                    ->label('Description')
                     ->limit(50)
                     ->sortable(),
             ])

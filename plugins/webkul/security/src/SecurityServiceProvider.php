@@ -27,6 +27,7 @@ class SecurityServiceProvider extends PackageServiceProvider
                 '2024_12_13_130906_add_partner_id_to_users_table',
                 '2025_08_21_082229_alter_roles_table',
                 '2025_08_21_101646_alter_users_table',
+                '2025_09_26_095225_add_description_to_teams_table',
             ])
             ->hasSettings([
                 '2024_11_05_042358_create_user_settings',
