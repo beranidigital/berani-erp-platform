@@ -3,11 +3,12 @@
 namespace Webkul\Security\Filament\Resources\CompanyResource\Pages;
 
 use Filament\Actions\CreateAction;
+use Webkul\Support\Models\Company;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
-use Webkul\Security\Filament\Resources\CompanyResource;
-use Webkul\Support\Models\Company;
 use Webkul\TableViews\Filament\Concerns\HasTableViews;
+use Webkul\Security\Filament\Resources\CompanyResource;
 
 class ListCompanies extends ListRecords
 {
@@ -22,11 +23,22 @@ class ListCompanies extends ListRecords
                 ->badge(Company::count()),
             'archived' => Tab::make(__('security::filament/resources/company/pages/list-company.tabs.archived'))
                 ->badge(Company::onlyTrashed()->count())
-                ->modifyQueryUsing(function ($query) {
-                    return $query->onlyTrashed();
-                }),
+                ->modifyQueryUsing(fn (Builder $query) => $query->onlyTrashed())
         ];
     }
+
+    protected function getTableQuery(): Builder
+{
+    $query = parent::getTableQuery();
+
+    if ($this->activeTab === 'archived') {
+        return $query->onlyTrashed();
+    }
+
+    return $query;
+}
+
+
 
     protected function getHeaderActions(): array
     {
