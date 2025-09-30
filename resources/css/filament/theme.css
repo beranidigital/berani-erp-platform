@@ -1,0 +1,180 @@
+@import '../../../vendor/filament/filament/resources/css/theme.css';
+
+/* Topbar base styling */
+.fi-topbar-ctn {
+    background-color: #E72027 !important;
+    color: #ffffff !important;
+}
+
+.fi-topbar,
+.fi-topbar-start,
+.fi-topbar-end {
+    background-color: transparent !important;
+}
+
+.fi-topbar,
+.fi-topbar a,
+.fi-topbar span,
+.fi-topbar button,
+.fi-topbar svg,
+.fi-topbar svg *,
+.fi-topbar .fi-user-menu-trigger,
+.fi-topbar .fi-topbar-item-btn,
+.fi-topbar .fi-topbar-item-label,
+.fi-topbar .fi-icon-btn,
+.fi-topbar .fi-database-notifications-trigger {
+    color: #ffffff !important;
+    fill: currentColor !important;
+}
+
+.fi-topbar .fi-topbar-item-btn,
+.fi-topbar .fi-topbar-item-label,
+.fi-topbar .fi-user-menu-trigger,
+.fi-topbar .fi-icon-btn,
+.fi-topbar .fi-database-notifications-trigger {
+    background-color: transparent !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.fi-topbar .fi-topbar-item-btn[aria-current='page'],
+.fi-topbar .fi-topbar-item-label[aria-current='page'] {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.fi-topbar .fi-topbar-item-btn:hover,
+.fi-topbar .fi-topbar-item-label:hover,
+.fi-topbar .fi-user-menu-trigger:hover,
+.fi-topbar .fi-icon-btn:hover,
+.fi-topbar .fi-database-notifications-trigger:hover,
+.fi-topbar .fi-topbar-item-btn:focus,
+.fi-topbar .fi-topbar-item-label:focus,
+.fi-topbar .fi-user-menu-trigger:focus,
+.fi-topbar .fi-icon-btn:focus,
+.fi-topbar .fi-database-notifications-trigger:focus,
+.fi-topbar .fi-topbar-item-btn:active,
+.fi-topbar .fi-topbar-item-label:active,
+.fi-topbar .fi-user-menu-trigger:active,
+.fi-topbar .fi-icon-btn:active,
+.fi-topbar .fi-database-notifications-trigger:active {
+    background-color: transparent !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: none !important;
+}
+
+/* Global search styling */
+.fi-topbar .fi-global-search {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.25rem 0.75rem !important;
+    background-color: #B21518 !important;
+    border: 1px solid #B21518 !important;
+    border-radius: 9999px !important;
+    color: #ffffff !important;
+}
+
+.fi-topbar .fi-global-search * {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: inherit !important;
+}
+
+.fi-topbar .fi-global-search .fi-input {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.375rem !important;
+    padding: 0 !important;
+}
+
+.fi-topbar .fi-global-search .fi-input-inline-prefix,
+.fi-topbar .fi-global-search .fi-input-inline-suffix {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.fi-topbar .fi-global-search .fi-input-inline-prefix svg,
+.fi-topbar .fi-global-search .fi-input-inline-prefix svg *,
+.fi-topbar .fi-global-search .fi-input-inline-suffix svg,
+.fi-topbar .fi-global-search .fi-input-inline-suffix svg * {
+    color: inherit !important;
+    fill: currentColor !important;
+}
+
+.fi-topbar .fi-global-search input {
+    padding: 0 !important;
+    min-width: 140px !important;
+}
+
+.fi-topbar .fi-global-search input::placeholder {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* User menu dropdown */
+.fi-user-menu .fi-dropdown-panel {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.fi-user-menu .fi-dropdown-panel *,
+.fi-user-menu .fi-dropdown-panel svg,
+.fi-user-menu .fi-dropdown-panel svg * {
+    color: #1f2937 !important;
+    fill: currentColor !important;
+}
+
+.fi-user-menu .fi-dropdown-list-item {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.fi-user-menu .fi-dropdown-list-item:hover,
+.fi-user-menu .fi-dropdown-list-item:focus,
+.fi-user-menu .fi-dropdown-list-item:active {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+.fi-user-menu .fi-dropdown-list-item .fi-badge {
+    color: inherit !important;
+}
+
+/* Topbar logo */
+.fi-topbar .fi-topbar-start img,
+.fi-topbar .fi-topbar-start svg {
+    filter: brightness(0) invert(1) !important;
+}
+
+/* Footer styling */
+.fi footer,
+.fi-page footer,
+.fi-layout footer {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.fi footer a,
+.fi-page footer a,
+.fi-layout footer a {
+    color: inherit !important;
+}
+
+.fi footer svg,
+.fi-page footer svg,
+.fi-layout footer svg,
+.fi footer svg *,
+.fi-page footer svg *,
+.fi-layout footer svg * {
+    color: inherit !important;
+    fill: currentColor !important;
+}
+
+.fi footer a:hover,
+.fi-page footer a:hover,
+.fi-layout footer a:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+}

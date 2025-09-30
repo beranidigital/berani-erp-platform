@@ -33,8 +33,9 @@ class CustomerPanelProvider extends PanelProvider
             ->brandLogo(asset('images/berani-logo.svg'))
             ->darkMode(false)
             ->brandLogoHeight('2rem')
+            ->viteTheme('resources/css/filament/theme.css')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Red,
             ])
             ->topNavigation()
             ->plugins([
@@ -54,3 +55,6 @@ class CustomerPanelProvider extends PanelProvider
             ->authGuard('customer');
     }
 }
+
+
+
