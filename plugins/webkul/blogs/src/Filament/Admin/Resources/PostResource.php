@@ -130,6 +130,20 @@ class PostResource extends Resource
                                         return str_contains($label, ' (Deleted)');
                                     })
                                     ->preload()
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->label(__('blogs::filament/admin/resources/post.form.sections.settings.fields.name'))
+                                            ->required()
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                                        TextInput::make('slug')
+                                            ->disabled()
+                                            ->dehydrated()
+                                            ->required()
+                                            ->unique('blogs_categories', 'slug', ignoreRecord: true),
+                                        Textarea::make('sub_title')
+                                            ->label(__('blogs::filament/admin/resources/post.form.sections.general.fields.sub-title')),
+                                    ])
                                     ->required(),
                                 Select::make('tags')
                                     ->label(__('blogs::filament/admin/resources/post.form.sections.settings.fields.tags'))
