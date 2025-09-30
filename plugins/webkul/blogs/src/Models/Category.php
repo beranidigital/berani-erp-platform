@@ -36,7 +36,6 @@ class Category extends Model
         'meta_keywords',
         'meta_description',
         'creator_id',
-        'color',
     ];
 
     /**

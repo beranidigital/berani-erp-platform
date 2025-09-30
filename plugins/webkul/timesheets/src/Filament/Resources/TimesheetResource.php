@@ -13,7 +13,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -65,7 +64,7 @@ class TimesheetResource extends Resource
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function (Set $set) {
+                    ->afterStateUpdated(function (\Filament\Schemas\Components\Utilities\Set $set) {
                         $set('task_id', null);
                     }),
                 Select::make('task_id')
@@ -119,20 +118,20 @@ class TimesheetResource extends Resource
                 TextColumn::make('unit_amount')
                     ->label(__('timesheets::filament/resources/timesheet.table.columns.time-spent'))
                     ->formatStateUsing(function ($state) {
-                        $hours = floor($state);
-                        $minutes = ($state - $hours) * 60;
+                        $formattedHours = floor($state);
+                        $formattedMinutes = round(($state - $formattedHours) * 60);
 
-                        return $hours.':'.$minutes;
+                        return $formattedHours . ' Hour' . ($formattedHours != 1 ? 's' : '') . ' ' . $formattedMinutes . ' Minute' . ($formattedMinutes != 1 ? 's' : '');
                     })
                     ->sortable()
                     ->summarize([
                         Sum::make()
                             ->label(__('timesheets::filament/resources/timesheet.table.columns.time-spent'))
                             ->formatStateUsing(function ($state) {
-                                $hours = floor($state);
-                                $minutes = ($state - $hours) * 60;
+                                $formattedHours = floor($state);
+                                $formattedMinutes = round(($state - $formattedHours) * 60);
 
-                                return $hours.':'.$minutes;
+                                return $formattedHours . ' Hour' . ($formattedHours != 1 ? 's' : '') . ' ' . $formattedMinutes . ' Minute' . ($formattedMinutes != 1 ? 's' : '');
                             }),
                     ]),
                 TextColumn::make('created_at')
@@ -155,10 +154,11 @@ class TimesheetResource extends Resource
                 Group::make('project.name')
                     ->label(__('timesheets::filament/resources/timesheet.table.groups.project')),
                 Group::make('task.title')
-                    ->label(__('timesheets::filament/resources/timesheet.table.groups.task')),
+                    ->label(__('timesheets::filament/resources/timesheet.table.groups.task'))
+,
                 Group::make('creator.name')
-                    ->label(__('timesheets::filament/resources/timesheet.table.groups.creator')),
-            ])
+                    ->label(__('timesheets::filament/resources/timesheet.table.groups.creator'))
+])
             ->filters([
                 Filter::make('date')
                     ->schema([
