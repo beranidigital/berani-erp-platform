@@ -36,5 +36,8 @@ class SecurityServiceProvider extends PackageServiceProvider
             ->runsSettings();
     }
 
-    public function packageBooted(): void {}
+    public function packageBooted(): void
+    {
+        $this->app->singleton(PermissionRegistrar::class);
+    }
 }

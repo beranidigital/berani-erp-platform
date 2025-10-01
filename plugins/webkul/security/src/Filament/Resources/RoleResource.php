@@ -27,6 +27,8 @@ use Webkul\Security\Filament\Resources\RoleResource\Pages\CreateRole;
 use Webkul\Security\Filament\Resources\RoleResource\Pages\EditRole;
 use Webkul\Security\Filament\Resources\RoleResource\Pages\ListRoles;
 use Webkul\Security\Filament\Resources\RoleResource\Pages\ViewRole;
+use BackedEnum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class RoleResource extends RolesRoleResource
 {
@@ -35,6 +37,18 @@ class RoleResource extends RolesRoleResource
     protected static ?int $navigationSort = 1;
 
     protected static $permissionsCollection;
+
+    public static $permissions = null;
+
+    public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
+    {
+        return null;
+    }
+
+    public static function getActiveNavigationIcon(): BackedEnum | Htmlable | null | string
+    {
+        return null;
+    }
 
     public static function getPermissionPrefixes(): array
     {
@@ -74,7 +88,7 @@ class RoleResource extends RolesRoleResource
                                 Select::make(config('permission.column_names.team_foreign_key'))
                                     ->label(__('filament-shield::filament-shield.field.team'))
                                     ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
-                                    ->default([Filament::getTenant()?->id])
+                                    ->default(Filament::getTenant()?->id)
                                     ->options(fn(): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
                                     ->hidden(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled()))
                                     ->dehydrated(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled())),
@@ -213,5 +227,34 @@ class RoleResource extends RolesRoleResource
                     ]);
             })
             ->toArray();
+    }
+
+    public static function setPermissionStateForRecordPermissions(Component $component, string $operation, array $permissions, ?Model $record): void
+    {
+        if (in_array($operation, ['edit', 'view'])) {
+            if (blank($record)) {
+                return;
+            }
+
+            if ($component->isVisible() && count($permissions) > 0) {
+                $component->state(
+                    collect($permissions)
+                        ->filter(function ($value, $key) use($record) {
+                            return static::getPermissions($record)->contains($key);
+                        })
+                        ->keys()
+                        ->toArray()
+                );
+            }
+        }
+    }
+
+    public static function getPermissions($record)
+    {
+        if (! is_null(static::$permissions)) {
+            return static::$permissions;
+        }
+
+        return static::$permissions = $record->permissions()->pluck('name');
     }
 }

@@ -44,19 +44,50 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Red,
             ])
             ->unsavedChangesAlerts()
-            // ->spa()
-            ->sidebarCollapsibleOnDesktop()
+            ->topNavigation()
             ->maxContentWidth(Width::Full)
-            ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Dashboard'),
-                NavigationGroup::make()
-                    ->label('Settings'),
-            ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
-                    ->label(fn () => filament()->auth()->user()?->name)
-                    ->url(fn (): string => Profile::getUrl()),
+                    ->label(fn() => filament()->auth()->user()?->name)
+                    ->url(fn(): string => Profile::getUrl()),
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.dashboard'))
+                    ->icon('icon-dashboard'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.contact'))
+                    ->icon('icon-contacts'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.sale'))
+                    ->icon('icon-sales'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.purchase'))
+                    ->icon('icon-purchases'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.invoice'))
+                    ->icon('icon-invoices'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.inventory'))
+                    ->icon('icon-inventories'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.project'))
+                    ->icon('icon-projects'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.employee'))
+                    ->icon('icon-employees'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.time-off'))
+                    ->icon('icon-time-offs'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.recruitment'))
+                    ->icon('icon-recruitments'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.website'))
+                    ->icon('icon-website'),
+                NavigationGroup::make()
+                    ->label(__('admin.navigation.setting'))
+                    ->icon('icon-settings'),
             ])
             ->plugins([
                 FilamentShieldPlugin::make()
