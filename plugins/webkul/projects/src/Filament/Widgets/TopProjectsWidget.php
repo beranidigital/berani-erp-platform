@@ -55,17 +55,18 @@ class TopProjectsWidget extends BaseWidget
             now();
 
         $query = $query
-            ->join('projects_projects', 'projects_projects.id', '=', 'analytic_records.project_id')
-            ->selectRaw('
-                analytic_records.project_id,
-                projects_projects.name as project_name,
-                SUM(analytic_records.unit_amount) as total_hours,
-                COUNT(DISTINCT analytic_records.task_id) as total_tasks
-            ')
-            ->whereBetween('analytic_records.created_at', [$startDate, $endDate])
-            ->groupBy('analytic_records.project_id', 'projects_projects.name')
-            ->orderByRaw('SUM(analytic_records.unit_amount) DESC')
-            ->limit(10);
+    ->join('projects_projects', 'projects_projects.id', '=', 'analytic_records.project_id')
+    ->selectRaw('
+        projects_projects.id as id,
+        projects_projects.name as project_name,
+        SUM(analytic_records.unit_amount) as total_hours,
+        COUNT(DISTINCT analytic_records.task_id) as total_tasks
+    ')
+    ->whereBetween('analytic_records.created_at', [$startDate, $endDate])
+    ->groupBy('projects_projects.id', 'projects_projects.name')
+    ->orderByRaw('SUM(analytic_records.unit_amount) DESC')
+    ->limit(10);
+
 
         return $table
             ->query($query)
