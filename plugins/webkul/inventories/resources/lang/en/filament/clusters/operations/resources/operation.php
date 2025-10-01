@@ -26,19 +26,6 @@ return [
             'operations' => [
                 'title' => 'Operations',
 
-                'columns' => [
-                    'product'        => 'Product',
-                    'final-location' => 'Final Location',
-                    'description'    => 'Description',
-                    'scheduled-at'   => 'Scheduled At',
-                    'deadline'       => 'Deadline',
-                    'packaging'      => 'Packaging',
-                    'demand'         => 'Demand',
-                    'quantity'       => 'Quantity',
-                    'unit'           => 'Unit',
-                    'picked'         => 'Picked',
-                ],
-
                 'fields' => [
                     'product'        => 'Product',
                     'final-location' => 'Final Location',

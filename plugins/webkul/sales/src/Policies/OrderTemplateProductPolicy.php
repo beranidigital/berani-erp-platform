@@ -91,6 +91,14 @@ class OrderTemplateProductPolicy
     }
 
     /**
+     * Determine whether the user can replicate.
+     */
+    public function replicate(User $user, OrderTemplateProduct $orderTemplateProduct): bool
+    {
+        return $user->can('replicate_order::template::product');
+    }
+
+    /**
      * Determine whether the user can reorder.
      */
     public function reorder(User $user): bool

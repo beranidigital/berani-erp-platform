@@ -55,6 +55,8 @@ class DepartmentResource extends Resource
 
     protected static ?string $model = Department::class;
 
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
+
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function getNavigationLabel(): string

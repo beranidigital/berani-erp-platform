@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
 
 class Profile extends Page implements HasForms
 {
@@ -71,7 +70,7 @@ class Profile extends Page implements HasForms
                                 '1:1',
                             ])
                             ->columnSpanFull()
-                            ->helperText(__('support::filament/pages/profile.fields.avatar').': '.__('support::filament/pages/profile.information_description'))
+                            ->helperText(__('support::filament/pages/profile.fields.avatar') . ': ' . __('support::filament/pages/profile.information_description'))
                             ->deletable(true)
                             ->downloadable(false),
 
@@ -123,10 +122,10 @@ class Profile extends Page implements HasForms
                             ->password()
                             ->revealable()
                             ->required()
+                            ->currentPassword()
                             ->autocomplete('current-password')
                             ->validationAttribute(__('support::filament/pages/profile.password.current'))
-                            ->currentPassword()
-                            ->helperText(__('support::filament/pages/profile.password.current-helper')),
+                            ->rules(['required', 'current_password']),
 
                         TextInput::make('password')
                             ->label(__('support::filament/pages/profile.password.new'))
@@ -139,8 +138,7 @@ class Profile extends Page implements HasForms
                             ->live(debounce: 500)
                             ->confirmed()
                             ->helperText(__('support::filament/pages/profile.password.helper'))
-                            ->different('current_password')
-                            ->dehydrateStateUsing(fn ($state): ?string => $state ? Hash::make($state) : null),
+                            ->dehydrateStateUsing(fn($state): ?string => $state ? Hash::make($state) : null),
 
                         TextInput::make('password_confirmation')
                             ->label(__('support::filament/pages/profile.password.confirm'))
@@ -195,8 +193,8 @@ class Profile extends Page implements HasForms
                 ->success()
                 ->duration(3000)
                 ->send();
-        } catch (ValidationException $e) {
-            throw $e;
+
+            $this->js('setTimeout(() => window.location.reload(), 2000)');
         } catch (Exception $e) {
             Notification::make()
                 ->title(__('support::filament/pages/profile.notification.error.title'))
@@ -207,22 +205,17 @@ class Profile extends Page implements HasForms
         }
     }
 
-    public function updatePassword(): mixed
+    public function updatePassword(): void
     {
         try {
             $this->editPasswordForm->validate();
-
             $data = $this->editPasswordForm->getState();
             $user = $this->getUser();
 
-            if (Hash::check($this->passwordData['password'], $user->password)) {
-                throw ValidationException::withMessages([
-                    'passwordData.password' => [__('support::filament/pages/profile.password.errors.same-as-current')],
-                ]);
-            }
-
             $user->password = $data['password'];
             $user->save();
+
+            Filament::auth()->login($user, true);
 
             $this->editPasswordForm->fill([
                 'current_password'      => '',
@@ -238,10 +231,6 @@ class Profile extends Page implements HasForms
                 ->success()
                 ->duration(3000)
                 ->send();
-
-            return redirect()->to(filament()->getCurrentPanel()->getLoginUrl());
-        } catch (ValidationException $e) {
-            throw $e;
         } catch (Exception $e) {
             Notification::make()
                 ->title(__('support::filament/pages/profile.password.notification.error.title'))
@@ -250,8 +239,6 @@ class Profile extends Page implements HasForms
                 ->duration(5000)
                 ->send();
         }
-
-        return null;
     }
 
     protected function getUser(): Authenticatable&Model

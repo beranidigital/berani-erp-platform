@@ -160,11 +160,6 @@ class RuleResource extends Resource
                                                             'operation'           => $operation?->name ?? __('inventories::filament/clusters/configurations/resources/rule.form.sections.general.fields.operation-type'),
                                                             'destinationLocation' => $operation?->destinationLocation?->full_name ?? __('inventories::filament/clusters/configurations/resources/rule.form.sections.general.fields.destination-location'),
                                                         ]);
-
-                                                        $buyMessage = __('inventories::filament/clusters/configurations/resources/rule.form.sections.general.fields.action-information.buy', [
-                                                            'destinationLocation' => $operation?->destinationLocation?->full_name ?? __('inventories::filament/clusters/configurations/resources/rule.form.sections.general.fields.destination-location'),
-                                                        ]);
-
                                                         $action = ($get('action') instanceof RuleAction)
                                                             ? $get('action')
                                                             : RuleAction::tryFrom($get('action') ?? RuleAction::PULL->value);
@@ -173,7 +168,7 @@ class RuleResource extends Resource
                                                             RuleAction::PULL      => new HtmlString($pullMessage),
                                                             RuleAction::PUSH      => new HtmlString($pushMessage),
                                                             RuleAction::PULL_PUSH => new HtmlString($pullMessage.'</br></br>'.$pushMessage),
-                                                            default               => new HtmlString($buyMessage),
+                                                            default               => new HtmlString('Unsupported action.'),
                                                         };
                                                     }),
                                             ]),

@@ -42,22 +42,22 @@ class AcceptInvitation extends SimplePage
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label(__('security::livewire/accept-invitation.form.name.label'))
+                    ->label(__('filament-panels::pages/auth/register.form.name.label'))
                     ->required()
                     ->maxLength(255)
                     ->autofocus(),
                 TextInput::make('email')
-                    ->label(__('security::livewire/accept-invitation.form.email.label'))
+                    ->label(__('filament-panels::pages/auth/register.form.email.label'))
                     ->disabled(),
                 TextInput::make('password')
-                    ->label(__('security::livewire/accept-invitation.form.password.label'))
+                    ->label(__('filament-panels::pages/auth/register.form.password.label'))
                     ->password()
                     ->required()
                     ->rule(Password::default())
                     ->same('passwordConfirmation')
-                    ->validationAttribute(__('security::livewire/accept-invitation.form.password.validation_attribute')),
+                    ->validationAttribute(__('filament-panels::pages/auth/register.form.password.validation_attribute')),
                 TextInput::make('passwordConfirmation')
-                    ->label(__('security::livewire/accept-invitation.form.password_confirmation.label'))
+                    ->label(__('filament-panels::pages/auth/register.form.password_confirmation.label'))
                     ->password()
                     ->required()
                     ->dehydrated(false),
@@ -96,7 +96,7 @@ class AcceptInvitation extends SimplePage
     public function getRegisterFormAction(): Action
     {
         return Action::make('register')
-            ->label(__('security::livewire/accept-invitation.form.actions.register.label'))
+            ->label(__('filament-panels::pages/auth/register.form.actions.register.label'))
             ->submit('register');
     }
 

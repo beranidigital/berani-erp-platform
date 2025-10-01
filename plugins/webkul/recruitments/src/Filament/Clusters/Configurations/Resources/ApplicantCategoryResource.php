@@ -9,7 +9,6 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\ColorEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -140,8 +139,9 @@ class ApplicantCategoryResource extends Resource
                     ->placeholder('—')
                     ->icon('heroicon-o-briefcase')
                     ->label(__('recruitments::filament/clusters/configurations/resources/applicant-category.infolist.name')),
-                ColorEntry::make('color')
+                TextEntry::make('color')
                     ->placeholder('—')
+                    ->icon('heroicon-o-briefcase')
                     ->label(__('recruitments::filament/clusters/configurations/resources/applicant-category.infolist.color')),
             ]);
     }

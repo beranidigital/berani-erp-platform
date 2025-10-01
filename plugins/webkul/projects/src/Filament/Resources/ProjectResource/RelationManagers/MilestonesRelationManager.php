@@ -2,7 +2,6 @@
 
 namespace Webkul\Project\Filament\Resources\ProjectResource\RelationManagers;
 
-use Webkul\Project\Filament\Resources\ProjectResource;
 use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -19,7 +18,7 @@ class MilestonesRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return ProjectResource::getTaskSettings()->enable_milestones && $ownerRecord->allow_milestones;
+        return app(TaskSettings::class)->enable_milestones && $ownerRecord->allow_milestones;
     }
 
     public function form(Schema $schema): Schema

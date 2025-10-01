@@ -8,7 +8,7 @@
 
         $tableFavoriteViews = $this->getFavoriteTableViews();
         $tablePresetViews = $this->getPresetTableViews();
-        $tableSavedViews = $this->getCachedTableViews();
+        $tableSavedViews = $this->getSavedTableViews();
     @endphp
 
     <x-filament::tabs

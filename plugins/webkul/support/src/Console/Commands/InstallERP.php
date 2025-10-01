@@ -3,13 +3,11 @@
 namespace Webkul\Support\Console\Commands;
 
 use BezhanSalleh\FilamentShield\Support\Utils;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -26,11 +24,7 @@ class InstallERP extends Command
      *
      * @var string
      */
-    protected $signature = 'erp:install
-        {--force : Force reinstallation without confirmation}
-        {--admin-name= : Admin user name}
-        {--admin-email= : Admin user email}
-        {--admin-password= : Admin user password}';
+    protected $signature = 'erp:install';
 
     /**
      * The console command description.
@@ -44,17 +38,6 @@ class InstallERP extends Command
      */
     public function handle()
     {
-        if (
-            $this->isAlreadyInstalled()
-            && ! $this->option('force')
-        ) {
-            if (! $this->handleReinstallation()) {
-                $this->info('Installation cancelled.');
-
-                return;
-            }
-        }
-
         $this->info('🚀 Starting ERP System Installation...');
 
         $this->runMigrations();
@@ -67,109 +50,9 @@ class InstallERP extends Command
 
         $this->createAdminUser();
 
-        $this->markAsInstalled();
-
         Event::dispatch('aureus.installed');
 
         $this->info('🎉 ERP System installation completed successfully!');
-    }
-
-    /**
-     * Check if the system is already installed.
-     */
-    protected function isAlreadyInstalled(): bool
-    {
-        $filePath = storage_path('installed');
-
-        return File::exists($filePath);
-    }
-
-    /**
-     * Handle reinstallation with warning and confirmation.
-     */
-    protected function handleReinstallation(): bool
-    {
-        $this->newLine();
-        $this->error('⚠️  WARNING: AUREIUS ERP IS ALREADY INSTALLED!');
-        $this->newLine();
-        $this->warn('🚨 DANGER ZONE 🚨');
-        $this->warn('Proceeding with reinstallation will:');
-        $this->warn('• WIPE ALL EXISTING DATA');
-        $this->warn('• DROP ALL DATABASE TABLES');
-        $this->warn('• REMOVE ALL USER ACCOUNTS');
-        $this->warn('• DELETE ALL COMPANY DATA');
-        $this->warn('• RESET ALL CONFIGURATIONS');
-        $this->newLine();
-        $this->error('THIS ACTION CANNOT BE UNDONE!');
-        $this->newLine();
-
-        $confirmation = $this->ask('Type "REINSTALL" (in capital letters) to confirm you want to proceed with reinstallation');
-
-        if ($confirmation !== 'REINSTALL') {
-            $this->error('Confirmation failed. Installation cancelled for safety.');
-
-            return false;
-        }
-
-        $doubleConfirmation = $this->confirm('Are you absolutely sure you want to wipe the database and reinstall? This is your last chance to cancel.');
-
-        if (! $doubleConfirmation) {
-            $this->info('Wise choice! Installation cancelled.');
-
-            return false;
-        }
-
-        $this->info('🔄 Proceeding with reinstallation...');
-        $this->wipeDatabase();
-        $this->removeInstallationMarker();
-
-        return true;
-    }
-
-    /**
-     * Wipe the database for fresh installation.
-     */
-    protected function wipeDatabase(): void
-    {
-        $this->info('🗑️  Wiping database...');
-
-        try {
-            Artisan::call('migrate:fresh', [], $this->getOutput());
-            $this->info('✅ Database wiped successfully.');
-        } catch (Exception $e) {
-            $this->error('❌ Failed to wipe database: '.$e->getMessage());
-
-            $this->error('Please manually drop your database and create a new one before proceeding.');
-
-            exit(1);
-        }
-    }
-
-    /**
-     * Mark the system as installed.
-     */
-    protected function markAsInstalled(): void
-    {
-        $filePath = storage_path('installed');
-
-        $content = sprintf(
-            "AureusERP is successfully installed.\nInstalled at: %s",
-            now()->toDateTimeString(),
-        );
-
-        File::put($filePath, $content);
-    }
-
-    /**
-     * Remove the installation marker file.
-     */
-    protected function removeInstallationMarker(): void
-    {
-        $filePath = storage_path('installed');
-
-        if (File::exists($filePath)) {
-            File::delete($filePath);
-        }
     }
 
     /**
@@ -231,11 +114,28 @@ class InstallERP extends Command
 
         $userModel = app(Utils::getAuthProviderFQCN());
 
-        $adminData = $this->getAdminCredentials($userModel);
-
-        $adminData['resource_permission'] = 'global';
-
-        $adminData['default_company_id'] = $defaultCompany->id;
+        $adminData = [
+            'name'  => text(
+                'Name',
+                default: 'Example',
+                required: true
+            ),
+            'email' => text(
+                'Email address',
+                default: 'admin@example.com',
+                required: true,
+                validate: fn ($email) => $this->validateAdminEmail($email, $userModel)
+            ),
+            'password' => Hash::make(
+                password(
+                    'Password',
+                    required: true,
+                    validate: fn ($value) => $this->validateAdminPassword($value)
+                )
+            ),
+            'resource_permission' => 'global',
+            'default_company_id'  => $defaultCompany->id,
+        ];
 
         $adminData['is_default'] = true;
 
@@ -254,65 +154,6 @@ class InstallERP extends Command
         $this->syncDefaultSettings($adminUser);
 
         $this->info("✅ Admin user '{$adminUser->name}' created and assigned the '{$this->getAdminRoleName()}' role successfully.");
-    }
-
-    /**
-     * Get admin data from command options or interactive prompts.
-     */
-    protected function getAdminCredentials(Model $userModel): array
-    {
-        $name = $this->option('admin-name');
-
-        if (empty($name)) {
-            $name = text(
-                'Name',
-                default: 'Example',
-                required: true
-            );
-        }
-
-        $email = $this->option('admin-email');
-
-        if (empty($email)) {
-            $email = text(
-                'Email address',
-                default: 'admin@example.com',
-                required: true,
-                validate: fn ($email) => $this->validateAdminEmail($email, $userModel)
-            );
-        } else {
-            $emailValidation = $this->validateAdminEmail($email, $userModel);
-
-            if ($emailValidation) {
-                $this->error("Invalid email: {$emailValidation}");
-
-                exit(1);
-            }
-        }
-
-        $passwordInput = $this->option('admin-password');
-
-        if (empty($passwordInput)) {
-            $passwordInput = password(
-                'Password',
-                required: true,
-                validate: fn ($value) => $this->validateAdminPassword($value)
-            );
-        } else {
-            $passwordValidation = $this->validateAdminPassword($passwordInput);
-
-            if ($passwordValidation) {
-                $this->error("Invalid password: {$passwordValidation}");
-
-                exit(1);
-            }
-        }
-
-        return [
-            'name'     => $name,
-            'email'    => $email,
-            'password' => Hash::make($passwordInput),
-        ];
     }
 
     /**

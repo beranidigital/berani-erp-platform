@@ -73,8 +73,6 @@ class Product extends Model implements Sortable
         'is_favorite'     => 'boolean',
         'is_configurable' => 'boolean',
         'images'          => 'array',
-        'cost'            => 'float',
-        'price'           => 'float',
     ];
 
     protected array $logAttributes = [

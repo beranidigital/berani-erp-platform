@@ -27,21 +27,19 @@ class EditViewAction extends Action
         $this
             ->model(TableView::class)
             ->fillForm(function (array $arguments): array {
-                $tableView = TableView::find($arguments['view_key']);
-
                 $tableViewFavorite = TableViewFavorite::query()
                     ->where('user_id', filament()->auth()->id())
                     ->where('view_type', 'saved')
-                    ->where('view_key', $tableView->view_key)
-                    ->where('filterable_type', $tableView->filterable_type)
+                    ->where('view_key', $arguments['view_model']['id'])
+                    ->where('filterable_type', $arguments['view_model']['filterable_type'])
                     ->first();
 
                 return [
-                    'name'        => $tableView->name,
-                    'color'       => $tableView->color,
-                    'icon'        => $tableView->icon,
+                    'name'        => $arguments['view_model']['name'],
+                    'color'       => $arguments['view_model']['color'],
+                    'icon'        => $arguments['view_model']['icon'],
                     'is_favorite' => $tableViewFavorite?->is_favorite ?? false,
-                    'is_public'   => $tableView->is_public,
+                    'is_public'   => $arguments['view_model']['is_public'],
                 ];
             })
             ->schema([
@@ -52,9 +50,7 @@ class EditViewAction extends Action
                 IconPicker::make('icon')
                     ->label(__('table-views::filament/actions/edit-view.form.icon'))
                     ->sets(['heroicons'])
-                    ->columns(4)
-                    ->gridSearchResults()
-                    ->iconsSearchResults(),
+                    ->columns(4),
                 Toggle::make('is_favorite')
                     ->label(__('table-views::filament/actions/edit-view.form.add-to-favorites'))
                     ->helperText(__('table-views::filament/actions/edit-view.form.add-to-favorites-help')),
@@ -62,27 +58,29 @@ class EditViewAction extends Action
                     ->label(__('table-views::filament/actions/edit-view.form.make-public'))
                     ->helperText(__('table-views::filament/actions/edit-view.form.make-public-help')),
             ])->action(function (array $arguments): void {
-                $tableView = TableView::find($arguments['view_key']);
+                TableView::find($arguments['view_model']['id'])->update($arguments['view_model']);
 
-                $this->process(function (array $data) use ($tableView): TableView {
-                    $tableView->fill($data);
-                    $tableView->save();
+                $record = $this->process(function (array $data) use ($arguments): TableView {
+                    $record = TableView::find($arguments['view_model']['id']);
+                    $record->fill($data);
+
+                    $record->save();
 
                     TableViewFavorite::updateOrCreate(
                         [
                             'view_type'       => 'saved',
-                            'view_key'        => $tableView->id,
-                            'filterable_type' => $tableView->filterable_type,
+                            'view_key'        => $arguments['view_model']['id'],
+                            'filterable_type' => $record->filterable_type,
                             'user_id'         => filament()->auth()->id(),
                         ], [
                             'is_favorite' => $data['is_favorite'],
                         ]
                     );
 
-                    return $tableView;
+                    return $record;
                 });
 
-                $this->record($tableView);
+                $this->record($record);
 
                 $this->success();
             })

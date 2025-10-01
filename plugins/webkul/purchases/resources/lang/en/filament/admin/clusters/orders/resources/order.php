@@ -43,21 +43,6 @@ return [
                             'unit-price'          => 'Unit Price',
                             'amount'              => 'Amount',
                         ],
-
-                        'columns' => [
-                            'product'             => 'Product',
-                            'expected-arrival'    => 'Expected Arrival',
-                            'quantity'            => 'Quantity',
-                            'received'            => 'Received',
-                            'billed'              => 'Billed',
-                            'unit'                => 'Unit',
-                            'packaging-qty'       => 'Packaging Qty',
-                            'packaging'           => 'Packaging',
-                            'taxes'               => 'Taxes',
-                            'discount-percentage' => 'Discount (%)',
-                            'unit-price'          => 'Unit Price',
-                            'amount'              => 'Amount',
-                        ],
                     ],
 
                     'section' => [

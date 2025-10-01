@@ -15,7 +15,15 @@ class TagPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_blog_tag');
+        return $user->can('view_any_tag');
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Tag $tag): bool
+    {
+        return $user->can('view_tag');
     }
 
     /**
@@ -23,7 +31,7 @@ class TagPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_blog_tag');
+        return $user->can('create_tag');
     }
 
     /**
@@ -31,7 +39,7 @@ class TagPolicy
      */
     public function update(User $user, Tag $tag): bool
     {
-        return $user->can('update_blog_tag');
+        return $user->can('update_tag');
     }
 
     /**
@@ -39,7 +47,7 @@ class TagPolicy
      */
     public function delete(User $user, Tag $tag): bool
     {
-        return $user->can('delete_blog_tag');
+        return $user->can('delete_tag');
     }
 
     /**
@@ -47,7 +55,7 @@ class TagPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_blog_tag');
+        return $user->can('delete_any_tag');
     }
 
     /**
@@ -55,7 +63,7 @@ class TagPolicy
      */
     public function forceDelete(User $user, Tag $tag): bool
     {
-        return $user->can('force_delete_blog_tag');
+        return $user->can('force_delete_tag');
     }
 
     /**
@@ -63,7 +71,7 @@ class TagPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_blog_tag');
+        return $user->can('force_delete_any_tag');
     }
 
     /**
@@ -71,7 +79,7 @@ class TagPolicy
      */
     public function restore(User $user, Tag $tag): bool
     {
-        return $user->can('restore_blog_tag');
+        return $user->can('restore_tag');
     }
 
     /**
@@ -79,6 +87,22 @@ class TagPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_blog_tag');
+        return $user->can('restore_any_tag');
+    }
+
+    /**
+     * Determine whether the user can replicate.
+     */
+    public function replicate(User $user, Tag $tag): bool
+    {
+        return $user->can('replicate_tag');
+    }
+
+    /**
+     * Determine whether the user can reorder.
+     */
+    public function reorder(User $user): bool
+    {
+        return $user->can('reorder_tag');
     }
 }

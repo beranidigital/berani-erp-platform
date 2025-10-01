@@ -29,11 +29,7 @@ use Webkul\Support\Package;
 
 class PurchaseOrder
 {
-
-    static public function getOrderSettings(): OrderSettings
-    {
-        return once(fn () => app(OrderSettings::class));
-    }
+    public function __construct(protected OrderSettings $orderSettings) {}
 
     public function sendRFQ(Order $record, array $data): Order
     {
@@ -71,7 +67,7 @@ class PurchaseOrder
     public function confirmPurchaseOrder(Order $record): Order
     {
         $record->update([
-            'state'       => static::getOrderSettings()->enable_lock_confirmed_orders
+            'state'       => $this->orderSettings->enable_lock_confirmed_orders
                 ? PurchaseEnums\OrderState::DONE
                 : PurchaseEnums\OrderState::PURCHASE,
             'approved_at' => now(),

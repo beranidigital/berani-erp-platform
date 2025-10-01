@@ -29,14 +29,6 @@ return [
             'products' => [
                 'title' => 'Products',
 
-                'columns' => [
-                    'product'    => 'Product',
-                    'quantity'   => 'Quantity',
-                    'ordered'    => 'Ordered',
-                    'uom'        => 'Unit of Measure',
-                    'unit-price' => 'Unit Price',
-                ],
-
                 'fields' => [
                     'product'    => 'Product',
                     'quantity'   => 'Quantity',

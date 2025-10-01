@@ -144,6 +144,7 @@ class ProductResource extends BaseProductResource
 
         $policyComponent = [
             Section::make()
+                ->visible(fn (Get $get) => $get('sales_ok'))
                 ->schema([
                     Select::make('invoice_policy')
                         ->label(__('invoices::filament/clusters/vendors/resources/product.form.sections.invoice-policy.title'))

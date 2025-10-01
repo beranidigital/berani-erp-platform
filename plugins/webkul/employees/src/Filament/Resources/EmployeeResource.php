@@ -87,6 +87,8 @@ class EmployeeResource extends Resource
 
     protected static ?string $model = Employee::class;
 
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static ?int $navigationSort = 1;
@@ -871,7 +873,7 @@ class EmployeeResource extends Resource
                                 ->color(fn ($state) => Color::generateV3Palette($state['color']))
                                 ->weight(FontWeight::Bold),
                         ])
-                            ->visible(fn ($record): bool => (bool) $record->categories->count()),
+                            ->visible(fn ($record): bool => (bool) $record->categories()->get()?->count()),
                     ])->space(1),
                 ])->space(4),
             ])
@@ -1363,8 +1365,7 @@ class EmployeeResource extends Resource
                                 ->body(__('employees::filament/resources/employee.table.bulk-actions.force-delete.notification.success.body'))
                         ),
                 ]),
-            ])
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['categories']));
+            ]);
     }
 
     public static function infolist(Schema $schema): Schema

@@ -51,8 +51,7 @@ class ManageInvoice extends SettingsPage
                     ->options(InvoicePolicy::class)
                     ->default('delivery')
                     ->label(__('sales::filament/clusters/settings/pages/manage-invoice.form.invoice-policy.label'))
-                    ->helperText(__('sales::filament/clusters/settings/pages/manage-invoice.form.invoice-policy.label-help'))
-                    ->enum(InvoicePolicy::class),
+                    ->helperText(__('sales::filament/clusters/settings/pages/manage-invoice.form.invoice-policy.label-help')),
             ]);
     }
 }

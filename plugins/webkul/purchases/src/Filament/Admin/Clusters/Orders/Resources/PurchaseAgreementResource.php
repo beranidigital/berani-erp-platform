@@ -14,6 +14,7 @@ use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -59,8 +60,6 @@ use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\PurchaseAgreementRe
 use Webkul\Purchase\Models\Requisition;
 use Webkul\Purchase\Settings\OrderSettings;
 use Webkul\Purchase\Settings\ProductSettings;
-use Webkul\Support\Filament\Forms\Components\Repeater;
-use Webkul\Support\Filament\Forms\Components\Repeater\TableColumn;
 
 class PurchaseAgreementResource extends Resource
 {
@@ -91,7 +90,7 @@ class PurchaseAgreementResource extends Resource
             return true;
         }
 
-        return static::getOrderSettings()->enable_purchase_agreements;
+        return app(OrderSettings::class)->enable_purchase_agreements;
     }
 
     public static function form(Schema $schema): Schema
@@ -222,32 +221,13 @@ class PurchaseAgreementResource extends Resource
     {
         $columns = 3;
 
-        if (static::getProductSettings()->enable_uom) {
+        if (app(ProductSettings::class)->enable_uom) {
             $columns++;
         }
 
         return Repeater::make('lines')
             ->hiddenLabel()
             ->relationship()
-            ->table([
-                TableColumn::make('product_id')
-                    ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.columns.product'))
-                    ->width(250)
-                    ->markAsRequired(),
-                TableColumn::make('qty')
-                    ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.columns.quantity'))
-                    ->width(250)
-                    ->markAsRequired(),
-                TableColumn::make('uom_id')
-                    ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.columns.uom'))
-                    ->width(250)
-                    ->visible(static::getProductSettings()->enable_uom)
-                    ->markAsRequired(),
-                TableColumn::make('price_unit')
-                    ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.columns.unit-price'))
-                    ->width(250)
-                    ->markAsRequired(),
-            ])
             ->schema([
                 Select::make('product_id')
                     ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.fields.product'))
@@ -287,7 +267,7 @@ class PurchaseAgreementResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->visible(static::getProductSettings()->enable_uom)
+                    ->visible(fn (ProductSettings $settings) => $settings->enable_uom)
                     ->disabled(fn ($record): bool => in_array($record?->requisition->state, [RequisitionState::CLOSED, RequisitionState::CANCELED])),
                 TextInput::make('price_unit')
                     ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.form.tabs.products.fields.unit-price'))
@@ -583,7 +563,7 @@ class PurchaseAgreementResource extends Resource
 
                                         TextEntry::make('uom.name')
                                             ->label(__('inventories::filament/clusters/operations/resources/operation.form.tabs.operations.entries.unit'))
-                                            ->visible(static::getProductSettings()->enable_uom),
+                                            ->visible(fn (ProductSettings $settings) => $settings->enable_uom),
 
                                         TextEntry::make('price_unit')
                                             ->label(__('purchases::filament/admin/clusters/orders/resources/purchase-agreement.infolist.tabs.products.entries.unit-price'))
@@ -631,16 +611,6 @@ class PurchaseAgreementResource extends Resource
                     ]),
             ])
             ->columns(1);
-    }
-
-    static public function getOrderSettings(): OrderSettings
-    {
-        return once(fn () => app(OrderSettings::class));
-    }
-
-    static public function getProductSettings(): ProductSettings
-    {
-        return once(fn () => app(ProductSettings::class));
     }
 
     public static function getRecordSubNavigation(Page $page): array

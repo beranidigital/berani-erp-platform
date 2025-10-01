@@ -35,11 +35,11 @@ class InvoicePlugin implements Plugin
                     ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Invoice\\Filament\\Widgets')
                     ->navigationItems([
                         NavigationItem::make('settings')
-                            ->label(fn () => __('invoices::app.navigation.settings.label'))
+                            ->label('Settings')
                             ->url(fn () => Products::getUrl())
+                            ->icon('heroicon-o-wrench')
                             ->group('Invoices')
-                            ->sort(4)
-                            ->visible(fn () => Products::canAccess()),
+                            ->sort(4),
                     ]);
             });
     }

@@ -7,6 +7,8 @@ use Filament\Panel;
 
 class Management extends Cluster
 {
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
+
     protected static ?int $navigationSort = 3;
 
     public static function getSlug(?Panel $panel = null): string
