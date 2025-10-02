@@ -15,6 +15,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Webkul\Support\PluginManager;
+use App\Http\Middleware\SetIntendedFromQuery;
 
 class CustomerPanelProvider extends PanelProvider
 {
@@ -51,6 +52,7 @@ class CustomerPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetIntendedFromQuery::class,
             ])
             ->authGuard('customer');
     }

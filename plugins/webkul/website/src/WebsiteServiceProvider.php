@@ -10,6 +10,7 @@ use Webkul\Support\Console\Commands\UninstallCommand;
 use Webkul\Support\Package;
 use Webkul\Support\PackageServiceProvider;
 use Webkul\Website\Http\Responses\LogoutResponse;
+use Webkul\Website\Http\Responses\LoginResponse;
 
 class WebsiteServiceProvider extends PackageServiceProvider
 {
@@ -55,6 +56,7 @@ class WebsiteServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->bind(\Filament\Auth\Http\Responses\Contracts\LogoutResponse::class, LogoutResponse::class);
+        $this->app->bind(\Filament\Auth\Http\Responses\Contracts\LoginResponse::class, LoginResponse::class);
     }
 
     public function registerCustomCss()

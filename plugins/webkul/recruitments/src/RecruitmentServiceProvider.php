@@ -34,6 +34,7 @@ class RecruitmentServiceProvider extends PackageServiceProvider
                 '2025_01_14_143102_add_columns_to_employees_job_positions_table',
                 '2025_01_16_081327_create_recruitments_job_position_interviewers_table',
             ])
+            ->hasRoutes(['web'])
             ->runsMigrations()
             ->hasDependencies([
                 'employees',

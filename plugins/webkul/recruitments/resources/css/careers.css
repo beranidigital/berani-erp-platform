@@ -1,0 +1,150 @@
+.careers-hero {
+    background:
+        radial-gradient(circle at top left, rgba(231, 32, 39, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(255, 214, 165, 0.35), transparent 45%),
+        linear-gradient(120deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7));
+}
+
+.careers-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.careers-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.1);
+}
+
+.careers-apply-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .careers-apply-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.careers-apply-form .careers-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.careers-apply-form .careers-form-field:focus-within {
+    border-color: rgba(231, 32, 39, 0.5);
+    box-shadow: 0 12px 28px rgba(231, 32, 39, 0.12);
+    transform: translateY(-2px);
+}
+
+.careers-form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    letter-spacing: -0.01em;
+}
+
+.careers-form-input,
+.careers-form-textarea,
+.careers-form-input[type="file"] {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 0.7rem 0.9rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.careers-form-input:focus,
+.careers-form-textarea:focus {
+    border-color: rgba(231, 32, 39, 0.65);
+    box-shadow: 0 0 0 4px rgba(231, 32, 39, 0.12);
+    outline: none;
+}
+
+.careers-form-input[type="file"] {
+    padding: 0.5rem 0.75rem;
+}
+
+.careers-form-input[type="file"]::file-selector-button {
+    border-radius: 0.65rem;
+    background-color: #E72027;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    margin-inline-end: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.careers-form-input[type="file"]::file-selector-button:hover {
+    background-color: #c31920;
+    transform: translateY(-1px);
+}
+
+.careers-form-subtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(231, 32, 39, 0.12), rgba(250, 108, 113, 0.12));
+    color: #E72027;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.careers-form-action {
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg, #E72027, #c31920);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.85rem 1.2rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 14px 28px rgba(231, 32, 39, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-position 0.3s ease;
+    background-size: 200% 200%;
+}
+
+.careers-form-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px rgba(195, 25, 32, 0.32);
+    background-position: right center;
+}
+
+.careers-form-note {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.careers-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 9999px;
+    background-color: rgba(231, 32, 39, 0.1);
+    color: #E72027;
+    padding: 0.375rem 0.75rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.careers-icon {
+    width: 1rem;
+    height: 1rem;
+}

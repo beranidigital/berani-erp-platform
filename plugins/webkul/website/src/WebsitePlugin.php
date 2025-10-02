@@ -126,6 +126,24 @@ class WebsitePlugin implements Plugin
             );
         });
 
+        $careersItem = NavigationItem::make('careers')
+            ->label('Careers')
+            ->url(fn (): string => url('/careers'))
+            ->isActiveWhen(fn (): bool => request()->is('careers') || request()->is('careers/*'));
+
+        // Find the position of the 'Blog' item and insert 'Careers' right after it
+        $blogIndex = $navigationItems->search(function ($item) {
+            return $item->getLabel() === 'Blog';
+        });
+
+        if ($blogIndex !== false) {
+            // Insert careers item after blog item
+            $navigationItems->splice($blogIndex + 1, 0, [$careersItem]);
+        } else {
+            // If blog item is not found, add careers to the end
+            $navigationItems->push($careersItem);
+        }
+
         return $navigationItems;
     }
 
@@ -155,6 +173,13 @@ class WebsitePlugin implements Plugin
                     })
             );
         });
+
+        $navigationItems->push(
+            NavigationItem::make('careers')
+                ->label('Careers')
+                ->url(fn (): string => url('/careers'))
+                ->isActiveWhen(fn (): bool => request()->is('careers') || request()->is('careers/*'))
+        );
 
         return $navigationItems;
     }

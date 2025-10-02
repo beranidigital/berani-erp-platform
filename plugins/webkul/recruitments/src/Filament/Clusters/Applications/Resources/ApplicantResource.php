@@ -705,8 +705,11 @@ class ApplicantResource extends Resource
             ])
             ->modifyQueryUsing(function (Builder $query) {
                 $query
-                    ->where('state', '!=', RecruitmentStateEnum::BLOCKED->value)
-                    ->orWhereNull('state');
+                    ->where(function (Builder $subQuery) {
+                        $subQuery
+                            ->where('state', '!=', RecruitmentStateEnum::BLOCKED->value)
+                            ->orWhereNull('state');
+                    });
             });
     }
 

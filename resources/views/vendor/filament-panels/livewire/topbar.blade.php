@@ -7,6 +7,48 @@
         $hasTopNavigation = filament()->hasTopNavigation();
         $hasNavigation = filament()->hasNavigation();
         $hasTenancy = filament()->hasTenancy();
+
+        if ($hasNavigation && ! empty($navigation)) {
+            $navigationCollection = collect($navigation);
+
+            $navigationCollection = $navigationCollection->map(function ($group) {
+                if (! $group instanceof \Filament\Navigation\NavigationGroup) {
+                    return $group;
+                }
+
+                $items = collect($group->getItems());
+
+                $careerIndex = $items->search(function ($item) {
+                    return $item instanceof \Filament\Navigation\NavigationItem
+                        && strcasecmp($item->getLabel(), 'Careers') === 0;
+                });
+
+                if ($careerIndex === false) {
+                    return $group;
+                }
+
+                $careerItem = $items->pull($careerIndex);
+
+                $items = $items->values();
+
+                $blogIndex = $items->search(function ($item) {
+                    return $item instanceof \Filament\Navigation\NavigationItem
+                        && strcasecmp($item->getLabel(), 'Blog') === 0;
+                });
+
+                if ($blogIndex !== false) {
+                    $items->splice(((int) $blogIndex) + 1, 0, [$careerItem]);
+                } else {
+                    $items->push($careerItem);
+                }
+
+                $group->items($items->all());
+
+                return $group;
+            });
+
+            $navigation = $navigationCollection->all();
+        }
     @endphp
 
     <nav class="fi-topbar">
@@ -246,6 +288,7 @@
                     <x-filament-panels::user-menu />
                 @endif
             @endif
+
         </div>
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END) }}
