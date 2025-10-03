@@ -38,7 +38,7 @@
     </section>
 
     <div class="mt-8 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-        <form method="GET" class="space-y-6">
+        <form method="GET" id="careers-filter-form" class="space-y-6">
             <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div class="flex flex-col gap-2">
                     <label for="keyword" class="text-sm font-medium text-slate-600">{{ __('Keyword') }}</label>
@@ -261,3 +261,40 @@
         @endforelse
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterForm = document.getElementById('careers-filter-form');
+
+            if (!filterForm) {
+                return;
+            }
+
+            const submitForm = () => {
+                window.requestAnimationFrame(() => filterForm.requestSubmit());
+            };
+
+            filterForm.querySelectorAll('select').forEach((selectEl) => {
+                selectEl.addEventListener('change', submitForm, { passive: true });
+            });
+
+            const searchInput = filterForm.querySelector('input[name="search"]');
+
+            if (searchInput) {
+                let debounceTimer;
+
+                const triggerSearch = () => {
+                    window.clearTimeout(debounceTimer);
+
+                    debounceTimer = window.setTimeout(() => {
+                        submitForm();
+                    }, 400);
+                };
+
+                searchInput.addEventListener('input', triggerSearch);
+                searchInput.addEventListener('search', submitForm);
+            }
+        });
+    </script>
+@endpush

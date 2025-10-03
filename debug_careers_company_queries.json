@@ -1,0 +1,124 @@
+[
+    {
+        "query": "select `code` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Recruitment\\Models\\JobPosition"
+        ],
+        "time": 1.12
+    },
+    {
+        "query": "select `code`, `type`, `is_multiselect` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Recruitment\\Models\\JobPosition"
+        ],
+        "time": 0.59
+    },
+    {
+        "query": "select * from `employees_job_positions` where `is_active` = ? and `company_id` = ? and `employees_job_positions`.`deleted_at` is null order by `created_at` desc",
+        "bindings": [
+            true,
+            999
+        ],
+        "time": 9.6
+    },
+    {
+        "query": "select count(*) as aggregate from `employees_job_positions` where `is_active` = ? and `employees_job_positions`.`deleted_at` is null",
+        "bindings": [
+            true
+        ],
+        "time": 1.21
+    },
+    {
+        "query": "select count(*) as aggregate from `employees_job_positions` where `is_active` = ? and `created_at` >= ? and `employees_job_positions`.`deleted_at` is null",
+        "bindings": [
+            true,
+            "2025-09-26T03:59:47.450057Z"
+        ],
+        "time": 1.05
+    },
+    {
+        "query": "select count(*) as aggregate from `employees_job_positions` where `is_active` = ? and `address_id` is null and `employees_job_positions`.`deleted_at` is null",
+        "bindings": [
+            true
+        ],
+        "time": 0.97
+    },
+    {
+        "query": "select `code` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Support\\Models\\Company"
+        ],
+        "time": 0.64
+    },
+    {
+        "query": "select `code`, `type`, `is_multiselect` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Support\\Models\\Company"
+        ],
+        "time": 0.64
+    },
+    {
+        "query": "select `name`, `id` from `companies` where `companies`.`deleted_at` is null order by `name` asc",
+        "bindings": [],
+        "time": 4.13
+    },
+    {
+        "query": "select `code` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Employee\\Models\\Department"
+        ],
+        "time": 0.6
+    },
+    {
+        "query": "select `code`, `type`, `is_multiselect` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Employee\\Models\\Department"
+        ],
+        "time": 0.44
+    },
+    {
+        "query": "select `name`, `id` from `employees_departments` where `employees_departments`.`deleted_at` is null order by `name` asc",
+        "bindings": [],
+        "time": 2.49
+    },
+    {
+        "query": "select `code` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Employee\\Models\\EmploymentType"
+        ],
+        "time": 0.82
+    },
+    {
+        "query": "select `code`, `type`, `is_multiselect` from `custom_fields` where `customizable_type` = ? and `custom_fields`.`deleted_at` is null",
+        "bindings": [
+            "Webkul\\Employee\\Models\\EmploymentType"
+        ],
+        "time": 0.63
+    },
+    {
+        "query": "select `name`, `id` from `employees_employment_types` order by `name` asc",
+        "bindings": [],
+        "time": 1.59
+    },
+    {
+        "query": "select `name`, `id` from `partners_partners` where `sub_type` = ? and `partners_partners`.`deleted_at` is null order by `name` asc",
+        "bindings": [
+            "company"
+        ],
+        "time": 2.14
+    },
+    {
+        "query": "select `name`, `payload` from `settings` where `group` = ?",
+        "bindings": [
+            "website_contact"
+        ],
+        "time": 1.51
+    },
+    {
+        "query": "select `name`, `payload` from `settings` where `group` = ?",
+        "bindings": [
+            "website_contact"
+        ],
+        "time": 0.91
+    }
+]
