@@ -2,25 +2,69 @@
 
 namespace Webkul\Website\Http\Responses;
 
-use Filament\Facades\Filament;
 use Filament\Auth\Http\Responses\Contracts\LoginResponse as LoginResponseContract;
+use Filament\Facades\Filament;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Arr;
 
 class LoginResponse implements LoginResponseContract
 {
     public function toResponse($request): RedirectResponse
     {
-        // For the customer panel, always go to home
-        if (Filament::getCurrentPanel()?->getId() === 'customer') {
-            return new RedirectResponse(url('/'));
+        $panel = Filament::getCurrentPanel();
+        $panelId = $panel?->getId();
+        $intendedUrl = redirect()->getIntendedUrl();
+        $loginUrl = $panel?->getLoginUrl();
+
+        if ($panelId === 'customer') {
+            $targetUrl = $intendedUrl ?: url('/');
+
+            if ($loginUrl && $this->urlsMatch($targetUrl, $loginUrl)) {
+                $targetUrl = url('/');
+            }
+
+            $this->clearIntendedUrl();
+
+            return new RedirectResponse($targetUrl);
         }
 
-        // Fallback: default behavior for other panels
-        $intendedUrl = redirect()->getIntendedUrl() ?: Filament::getUrl();
-        return new RedirectResponse($intendedUrl);
+        $defaultUrl = Filament::getUrl() ?? url('/admin');
+        $targetUrl = $intendedUrl ?: $defaultUrl;
+
+        if ($loginUrl && $this->urlsMatch($targetUrl, $loginUrl)) {
+            $targetUrl = $defaultUrl;
+        }
+
+        $this->clearIntendedUrl();
+
+        return new RedirectResponse($targetUrl);
+    }
+
+    protected function clearIntendedUrl(): void
+    {
+        session()->forget('url.intended');
+    }
+
+    protected function urlsMatch(?string $first, ?string $second): bool
+    {
+        if (! $first || ! $second) {
+            return false;
+        }
+
+        return $this->normalizePath($first) === $this->normalizePath($second);
+    }
+
+    protected function normalizePath(string $url): string
+    {
+        $parsed = parse_url($url);
+
+        if ($parsed === false) {
+            return trim($url, '/');
+        }
+
+        $path = Arr::get($parsed, 'path', '/');
+
+        return rtrim($path, '/') ?: '/';
     }
 }
-
-
 
