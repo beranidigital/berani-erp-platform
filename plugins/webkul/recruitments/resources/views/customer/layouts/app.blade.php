@@ -43,30 +43,6 @@
 
                 <div class="fi-main-content space-y-10">
                     @yield('content')
-
-                    <footer class="border-t border-gray-200 bg-white px-6 py-6 text-sm text-gray-500 shadow-sm sm:rounded-lg sm:px-8">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div class="space-y-1">
-                                <p>&copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}</p>
-                                @if (! empty($contacts['email']))
-                                    <p>{{ __('Email:') }} <a href="mailto:{{ $contacts['email'] }}" class="hover:text-primary-600">{{ $contacts['email'] }}</a></p>
-                                @endif
-                                @if (! empty($contacts['phone']))
-                                    <p>{{ __('Phone:') }} <a href="tel:{{ $contacts['phone'] }}" class="hover:text-primary-600">{{ $contacts['phone'] }}</a></p>
-                                @endif
-                            </div>
-
-                            @if (! empty($socialLinks))
-                                <div class="flex items-center gap-4">
-                                    @foreach ($socialLinks as $link)
-                                        <a href="{{ $link['url'] }}" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary-600" aria-label="{{ $link['label'] }}">
-                                            {!! $link['icon'] !!}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                    </footer>
                 </div>
 
                 {{ FilamentView::renderHook(\Filament\View\PanelsRenderHook::CONTENT_END, scopes: $renderHookScopes) }}
@@ -79,3 +55,21 @@
         {{ FilamentView::renderHook(\Filament\View\PanelsRenderHook::LAYOUT_END, scopes: $renderHookScopes) }}
     </div>
 </x-filament-panels::layout.base>
+
+@php
+    $footerNavigationItems = ($footerNavigationItems ?? collect()) instanceof \Illuminate\Support\Collection
+        ? $footerNavigationItems
+        : collect($footerNavigationItems ?? []);
+    $footerContacts = $contacts ?? [];
+    $footerSocialLinks = ($socialLinks ?? collect()) instanceof \Illuminate\Support\Collection
+        ? $socialLinks
+        : collect($socialLinks ?? []);
+@endphp
+
+<div class="relative mt-16 w-screen -translate-x-1/2 left-1/2">
+    @include('website::filament.customer.footer.index', [
+        'navigationItems' => $footerNavigationItems,
+        'contacts'        => $footerContacts,
+        'socialLinks'     => $footerSocialLinks,
+    ])
+</div>

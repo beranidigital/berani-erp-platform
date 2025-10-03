@@ -140,7 +140,7 @@
 
                     <button
                         type="submit"
-                        class="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                        class="careers-form-action"
                     >
                         <x-filament::icon icon="heroicon-m-funnel" class="h-4 w-4" />
                         {{ __('Apply filters') }}

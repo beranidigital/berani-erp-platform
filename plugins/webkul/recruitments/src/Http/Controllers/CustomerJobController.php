@@ -3,22 +3,26 @@
 namespace Webkul\Recruitment\Http\Controllers;
 
 use Carbon\Carbon;
+use Filament\Facades\Filament;
+use Filament\Navigation\NavigationItem;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Filament\Facades\Filament;
 use Webkul\Recruitment\Http\Requests\StoreJobApplicationRequest;
 use Webkul\Recruitment\Models\Applicant;
 use Webkul\Recruitment\Models\Candidate;
 use Webkul\Recruitment\Models\JobPosition;
 use Webkul\Recruitment\Models\Stage;
-use Webkul\Security\Models\User;
-use Webkul\Website\Settings\ContactSettings;
 use Webkul\Employee\Models\Department;
 use Webkul\Employee\Models\EmploymentType;
 use Webkul\Support\Models\Company;
 use Webkul\Partner\Models\Partner;
+use Webkul\Security\Models\User;
+use Webkul\Website\Filament\Customer\Resources\PageResource;
+use Webkul\Website\Models\Page;
+use Webkul\Website\Settings\ContactSettings;
 
 class CustomerJobController
 {
@@ -113,6 +117,7 @@ class CustomerJobController
             'filterOptions'   => $filterOptions,
             'activeFilters'   => $activeFilters,
             'hasActiveFilters'=> $hasActiveFilters,
+            'footerNavigationItems' => $this->getFooterNavigationItems(),
         ]);
     }
 
@@ -161,6 +166,7 @@ class CustomerJobController
             'socialLinks' => $this->getSocialLinks(),
             'title'       => $jobPosition->name,
             'relatedJobs' => $relatedJobs,
+            'footerNavigationItems' => $this->getFooterNavigationItems(),
         ]);
     }
 
@@ -442,44 +448,70 @@ class CustomerJobController
         return $contacts;
     }
 
-    private function getSocialLinks(): array
+    private function getSocialLinks(): Collection
     {
-        $links = [];
+        $links = new Collection;
 
         $contactSettings = app(ContactSettings::class);
 
         $mapping = [
-            'facebook' => fn ($value) => [
-                'label' => 'Facebook',
-                'url'   => 'https://facebook.com/'.$value,
-                'icon'  => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path></svg>',
-            ],
-            'twitter' => fn ($value) => [
-                'label' => 'Twitter',
-                'url'   => 'https://twitter.com/'.$value,
-                'icon'  => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>',
-            ],
-            'instagram' => fn ($value) => [
-                'label' => 'Instagram',
-                'url'   => 'https://instagram.com/'.$value,
-                'icon'  => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5.888 14.12c-.23.007-.461.007-.691.007-1.28 0-2.561-.137-3.779-.407-1.325-.296-2.604-.854-3.686-1.674a8.472 8.472 0 01-2.307-2.64 8.081 8.081 0 01-1.174-3.05 9.52 9.52 0 01-.07-2.301c.072-.83.283-1.653.631-2.404a7.63 7.63 0 011.922-2.416A8.57 8.57 0 0111.55 2.21a9.98 9.98 0 012.5-.252c.83.039 1.648.195 2.432.457a8.89 8.89 0 012.896 1.491c1.527 1.186 2.755 2.682 3.375 4.58.418 1.23.57 2.57.445 3.878-.118 1.318-.51 2.575-1.153 3.646-.757 1.255-1.76 2.255-2.92 2.996-.823.497-1.75.778-2.695.897-.258.033-.517.05-.777.05-.258 0-.516-.017-.775-.05zm.705-13.45a7.29 7.29 0 00-3.89-.607c-1.596.178-3.137.981-4.297 2.175a7.185 7.185 0 00-1.88 3.22 7.587 7.587 0 00-.107 2.79c.16 1.3.703 2.527 1.546 3.525.705.831 1.625 1.474 2.648 1.845.772.281 1.596.402 2.408.344 1.1-.077 2.143-.51 2.98-1.196a6.423 6.423 0 001.91-2.626c.394-.92.576-1.947.52-2.962a6.332 6.332 0 00-.709-2.61 6.822 6.822 0 00-1.13-1.701z"></path></svg>',
-            ],
-            'linkedin' => fn ($value) => [
-                'label' => 'LinkedIn',
-                'url'   => 'https://linkedin.com/in/'.$value,
-                'icon'  => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452H17.24v-5.569c0-1.328-.026-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.21V9h3.079v1.561h.044c.429-.81 1.475-1.666 3.037-1.666 3.25 0 3.852 2.14 3.852 4.926v6.631zM5.337 7.433a1.861 1.861 0 01-1.854-1.867c0-1.029.83-1.867 1.854-1.867s1.853.838 1.853 1.867c0 1.029-.829 1.867-1.853 1.867zM7.119 20.452H3.553V9h3.566v11.452zM22.225 0H1.771C.792 0 0 .771 0 1.723v20.555C0 23.23.792 24 1.771 24h20.451C23.2 24 24 23.23 24 22.278V1.723C24 .77 23.2 0 22.222 0z"></path></svg>',
-            ],
+            'facebook' => fn ($value) => NavigationItem::make('Facebook')
+                ->url('https://facebook.com/'.$value)
+                ->icon(fn (): string => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path></svg>'),
+            'twitter' => fn ($value) => NavigationItem::make('Twitter')
+                ->url('https://twitter.com/'.$value)
+                ->icon(fn (): string => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>'),
+            'instagram' => fn ($value) => NavigationItem::make('Instagram')
+                ->url('https://instagram.com/'.$value)
+                ->icon(fn (): string => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5.888 14.12c-.23.007-.461.007-.691.007-1.28 0-2.561-.137-3.779-.407-1.325-.296-2.604-.854-3.686-1.674a8.472 8.472 0 01-2.307-2.64 8.081 8.081 0 01-1.174-3.05 9.52 9.52 0 01-.07-2.301c.072-.83.283-1.653.631-2.404a7.63 7.63 0 011.922-2.416A8.57 8.57 0 0111.55 2.21a9.98 9.98 0 012.5-.252c.83.039 1.648.195 2.432.457a8.89 8.89 0 012.896 1.491c1.527 1.186 2.755 2.682 3.375 4.58.418 1.23.57 2.57.445 3.878-.118 1.318-.51 2.575-1.153 3.646-.757 1.255-1.76 2.255-2.92 2.996-.823.497-1.75.778-2.695.897-.258.033-.517.05-.777.05-.258 0-.516-.017-.775-.05zm.705-13.45a7.29 7.29 0 00-3.89-.607c-1.596.178-3.137.981-4.297 2.175a7.185 7.185 0 00-1.88 3.22 7.587 7.587 0 00-.107 2.79c.16 1.3.703 2.527 1.546 3.525.705.831 1.625 1.474 2.648 1.845.772.281 1.596.402 2.408.344 1.1-.077 2.143-.51 2.98-1.196a6.423 6.423 0 001.91-2.626c.394-.92.576-1.947.52-2.962a6.332 6.332 0 00-.709-2.61 6.822 6.822 0 00-1.13-1.701z"></path></svg>'),
+            'linkedin' => fn ($value) => NavigationItem::make('LinkedIn')
+                ->url('https://linkedin.com/in/'.$value)
+                ->icon(fn (): string => '<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452H17.24v-5.569c0-1.328-.026-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.21V9h3.079v1.561h.044c.429-.81 1.475-1.666 3.037-1.666 3.25 0 3.852 2.14 3.852 4.926v6.631zM5.337 7.433a1.861 1.861 0 01-1.854-1.867c0-1.029.83-1.867 1.854-1.867s1.853.838 1.853 1.867c0 1.029-.829 1.867-1.853 1.867zM7.119 20.452H3.553V9h3.566v11.452zM22.225 0H1.771C.792 0 0 .771 0 1.723v20.555C0 23.23.792 24 1.771 24h20.451C23.2 24 24 23.23 24 22.278V1.723C24 .77 23.2 0 22.222 0z"></path></svg>'),
         ];
 
         foreach ($mapping as $field => $callback) {
             if ($value = $contactSettings->{$field}) {
-                $links[] = $callback($value);
+                $links->push($callback($value));
             }
         }
 
         return $links;
     }
 
+    private function getFooterNavigationItems(): Collection
+    {
+        $navigationItems = new Collection([
+            NavigationItem::make('home')->label(__('Home'))->url(fn (): string => url('/')),
+        ]);
+
+        $pages = Page::query()
+            ->where('is_footer_visible', true)
+            ->where('is_published', true)
+            ->get();
+
+        $pages->each(function (Page $page) use ($navigationItems) {
+            $navigationItems->push(
+                NavigationItem::make('page-'.$page->slug)
+                    ->label($page->title)
+                    ->url(fn (): string => PageResource::getUrl('view', ['record' => $page->slug]))
+                    ->isActiveWhen(function () use ($page) {
+                        if (! request()->routeIs(PageResource::getRouteBaseName().'.view')) {
+                            return false;
+                        }
+
+                        return request('record') === $page->slug;
+                    })
+            );
+        });
+
+        $navigationItems->push(
+            NavigationItem::make('careers')
+                ->label('Careers')
+                ->url(fn (): string => url('/careers'))
+                ->isActiveWhen(fn (): bool => request()->is('careers') || request()->is('careers/*'))
+        );
+
+        return $navigationItems;
+    }
+
 }
-
-
