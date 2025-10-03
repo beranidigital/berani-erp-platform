@@ -3,8 +3,9 @@
 namespace Webkul\Employee\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Webkul\Security\Models\User;
+use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\DB;
 
 class SkillTypeSeeder extends Seeder
 {
@@ -60,6 +61,60 @@ class SkillTypeSeeder extends Seeder
                 'id'         => 5,
                 'name'       => 'Marketing',
                 'color'      => 'gray',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 6,
+                'name'       => 'Technical & Mechanical',
+                'color'      => 'primary',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 7,
+                'name'       => 'Construction',
+                'color'      => 'info',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 8,
+                'name'       => 'Maintenance & Repair',
+                'color'      => 'success',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 9,
+                'name'       => 'Manufacturing & Production',
+                'color'      => 'warning',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 10,
+                'name'       => 'Transport & Logistics',
+                'color'      => 'danger',
+                'is_active'  => 1,
+                'creator_id' => $user?->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'         => 11,
+                'name'       => 'Safety & Compliance',
+                'color'      => 'primary',
                 'is_active'  => 1,
                 'creator_id' => $user?->id,
                 'created_at' => now(),
