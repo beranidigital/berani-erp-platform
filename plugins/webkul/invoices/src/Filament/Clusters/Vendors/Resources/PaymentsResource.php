@@ -5,6 +5,7 @@ namespace Webkul\Invoice\Filament\Clusters\Vendors\Resources;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
 use Webkul\Account\Filament\Resources\PaymentsResource as BasePaymentsResource;
 use Webkul\Invoice\Filament\Clusters\Vendors;
@@ -62,6 +63,21 @@ class PaymentsResource extends BasePaymentsResource
                     'name',
                     fn ($query) => $query->where('sub_type', 'supplier')->orderBy('id')
                 )
+                ->searchable()
+                ->preload();
+
+            // Ensure Payment Method dropdown shows only unique names
+            $fields[3] = Forms\Components\Select::make('payment_method_line_id')
+                ->label(__('accounts::filament/resources/payment.form.sections.fields.payment-method'))
+                ->relationship(
+                    'paymentMethodLine',
+                    'name',
+                    modifyQueryUsing: function (Builder $query) {
+                        $query->selectRaw('MIN(accounts_payment_method_lines.id) as id, name')
+                            ->groupBy('name');
+                    }
+                )
+                ->getOptionLabelFromRecordUsing(fn ($record): string => $record->name)
                 ->searchable()
                 ->preload();
 
