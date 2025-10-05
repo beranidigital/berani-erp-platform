@@ -79,13 +79,13 @@
 
                <div class="invoice-item">
                     <span>Untaxed Amount</span>
-                    <span>{{ money($subTotal, $currency?->name) }}</span>
+                    <span>{{ $currency?->symbol }} {{ number_format($subTotal, $currency?->decimal_places ?? 2) }}</span>
                 </div>
 
                 @if ($totalTax > 0)
                     <div class="invoice-item">
                         <span>Tax</span>
-                        <span>{{ money($totalTax, $currency?->name) }}</span>
+                        <span>{{ $currency?->symbol }} {{ number_format($totalTax, $currency?->decimal_places ?? 2) }}</span>
                     </div>
                 @endif
 
@@ -93,13 +93,13 @@
 
                 <div class="invoice-item font-bold">
                     <span>Total</span>
-                    <span>{{ money($grandTotal, $currency?->name) }}</span>
+                    <span>{{ $currency?->symbol }} {{ number_format($grandTotal, $currency?->decimal_places ?? 2) }}</span>
                 </div>
 
                 @if ($enableMargin)
                     <div class="invoice-item font-bold">
                         <span>Margin</span>
-                        <span>{{ number_format($margin, 2) }} ({{ number_format($marginPercentage, 2) }} %)</span>
+                        <span>{{ $currency?->symbol }} {{ number_format($margin, $currency?->decimal_places ?? 2) }} ({{ number_format($marginPercentage, 2) }} %)</span>
                     </div>
                 @endif
             </div>
