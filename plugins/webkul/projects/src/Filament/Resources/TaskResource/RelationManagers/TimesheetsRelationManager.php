@@ -15,9 +15,11 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Webkul\Project\Settings\TimeSettings;
+use Webkul\Security\Models\User;
 
 class TimesheetsRelationManager extends RelationManager
 {
@@ -49,9 +51,19 @@ class TimesheetsRelationManager extends RelationManager
                 Select::make('user_id')
                     ->label(__('projects::filament/resources/task/relation-managers/timesheets.form.employee'))
                     ->required()
-                    ->relationship('user', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->options(fn () => User::query()
+                        ->orderBy('name')
+                        ->limit(50)
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->getSearchResultsUsing(fn (string $search) => User::query()
+                        ->orderBy('name')
+                        ->when($search, fn (Builder $query) => $query->where('name', 'like', "%{$search}%"))
+                        ->limit(50)
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->getOptionLabelUsing(fn ($value): ?string => User::withTrashed()->find($value)?->name),
                 TextInput::make('name')
                     ->label(__('projects::filament/resources/task/relation-managers/timesheets.form.description')),
                 TextInput::make('unit_amount')

@@ -4,6 +4,7 @@ namespace Webkul\Project\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Webkul\Analytic\Models\Record;
+use Webkul\Security\Models\User;
 
 class Timesheet extends Record
 {
@@ -35,6 +36,11 @@ class Timesheet extends Record
     public function task()
     {
         return $this->belongsTo(Task::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function updateTaskTimes()

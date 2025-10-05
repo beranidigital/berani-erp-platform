@@ -23,6 +23,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Webkul\Project\Models\Timesheet;
+use Webkul\Security\Models\User;
 use Webkul\Timesheet\Filament\Resources\TimesheetResource\Pages\ManageTimesheets;
 
 class TimesheetResource extends Resource
@@ -54,9 +55,19 @@ class TimesheetResource extends Resource
                 Select::make('user_id')
                     ->label(__('timesheets::filament/resources/timesheet.form.employee'))
                     ->required()
-                    ->relationship('user', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->options(fn () => User::query()
+                        ->orderBy('name')
+                        ->limit(50)
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->getSearchResultsUsing(fn (string $search) => User::query()
+                        ->orderBy('name')
+                        ->when($search, fn (Builder $query) => $query->where('name', 'like', "%{$search}%"))
+                        ->limit(50)
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->getOptionLabelUsing(fn ($value): ?string => User::withTrashed()->find($value)?->name),
                 Select::make('project_id')
                     ->label(__('timesheets::filament/resources/timesheet.form.project'))
                     ->required()
@@ -195,9 +206,17 @@ class TimesheetResource extends Resource
                     }),
                 SelectFilter::make('user_id')
                     ->label(__('timesheets::filament/resources/timesheet.table.filters.employee'))
-                    ->relationship('user', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->options(fn () => User::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'] ?? null,
+                            fn (Builder $query, $userId): Builder => $query->where('user_id', $userId),
+                        );
+                    }),
                 SelectFilter::make('project_id')
                     ->label(__('timesheets::filament/resources/timesheet.table.filters.project'))
                     ->relationship('project', 'name')
