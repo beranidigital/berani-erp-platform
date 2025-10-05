@@ -49,6 +49,7 @@ class Partner extends Authenticatable implements FilamentUser
         'phone',
         'mobile',
         'color',
+        'language',
         'company_registry',
         'reference',
         'street1',
@@ -164,3 +165,4 @@ class Partner extends Authenticatable implements FilamentUser
         return PartnerFactory::new();
     }
 }
+

@@ -20,6 +20,7 @@ return [
                     'short-name' => 'Short Name',
                     'tags'       => 'Tags',
                     'color'      => 'Color',
+                    'language'   => 'Preferred Language',
                 ],
 
                 'address' => [
@@ -175,6 +176,7 @@ return [
                     'name'       => 'Name',
                     'short-name' => 'Short Name',
                     'tags'       => 'Tags',
+                    'language'   => 'Preferred Language',
                 ],
 
                 'address' => [
@@ -210,3 +212,7 @@ return [
         ],
     ],
 ];
+
+
+
+

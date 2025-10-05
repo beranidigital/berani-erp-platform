@@ -2,6 +2,9 @@
 
 namespace Webkul\Support\Filament\Pages;
 
+use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Session;
+use App\Support\Locale;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
@@ -101,6 +104,12 @@ class Profile extends Page implements HasForms
                                     ->afterStateUpdated(function ($state, Set $set) {
                                         $set('email', strtolower(trim($state)));
                                     }),
+                                Select::make('language')
+                                    ->label(__('support::filament/pages/profile.fields.language'))
+                                    ->options(Locale::options())
+                                    ->default(config('app.locale'))
+                                    ->required()
+                                    ->searchable(),
                             ]),
                     ]),
             ])
@@ -176,12 +185,18 @@ class Profile extends Page implements HasForms
                 $user->partner->save();
             }
 
+            $locale = $data['language'] ?? config('app.locale');
+
             $user->fill([
-                'name'  => trim($data['name']),
-                'email' => strtolower(trim($data['email'])),
+                'name'     => trim($data['name']),
+                'email'    => strtolower(trim($data['email'])),
+                'language' => $locale,
             ]);
 
             $user->save();
+
+            Session::put('locale', $locale);
+            app()->setLocale($locale);
 
             $this->fillProfileForm();
 
@@ -262,9 +277,10 @@ class Profile extends Page implements HasForms
     {
         $user = $this->getUser();
 
-        $userData = $user->only(['name', 'email', 'avatar']);
+        $userData = $user->only(['name', 'email', 'avatar', 'language']);
 
         $userData['avatar'] = $user->partner->avatar;
+        $userData['language'] ??= config('app.locale');
 
         $this->editProfileForm->fill($userData);
     }
@@ -320,3 +336,8 @@ class Profile extends Page implements HasForms
         ];
     }
 }
+
+
+
+
+

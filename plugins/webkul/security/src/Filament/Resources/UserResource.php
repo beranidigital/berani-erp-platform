@@ -2,6 +2,7 @@
 
 namespace Webkul\Security\Filament\Resources;
 
+use App\Support\Locale;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -154,9 +155,8 @@ class UserResource extends Resource
                                     ->schema([
                                         Select::make('language')
                                             ->label(__('security::filament/resources/user.form.sections.lang-and-status.fields.language'))
-                                            ->options([
-                                                'en' => __('English'),
-                                            ])
+                                            ->options(fn () => Locale::options())
+                                            ->default(config('app.locale'))
                                             ->searchable(),
                                         Toggle::make('is_active')
                                             ->label(__('security::filament/resources/user.form.sections.lang-and-status.fields.status'))
@@ -404,6 +404,7 @@ class UserResource extends Resource
                                             ->label(__('security::filament/resources/user.infolist.sections.general-information.entries.email')),
                                         TextEntry::make('language')
                                             ->icon('heroicon-o-language')
+                                            ->formatStateUsing(fn ($state) => Locale::options()[strtolower((string) $state)] ?? strtoupper((string) $state))
                                             ->placeholder('—')
                                             ->label(__('security::filament/resources/user.infolist.sections.lang-and-status.entries.language')),
                                     ])

@@ -27,6 +27,7 @@ return [
         'avatar' => 'Profile Photo',
         'name'   => 'Name',
         'email'  => 'Email',
+        'language' => 'Preferred Language',
     ],
 
     'password' => [
@@ -50,3 +51,4 @@ return [
         ],
     ],
 ];
+

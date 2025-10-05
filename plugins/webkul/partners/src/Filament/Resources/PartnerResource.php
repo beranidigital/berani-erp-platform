@@ -2,6 +2,7 @@
 
 namespace Webkul\Partner\Filament\Resources;
 
+use App\Support\Locale;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -170,6 +171,11 @@ class PartnerResource extends Resource
                                     ->label(__('partners::filament/resources/partner.form.sections.general.fields.website'))
                                     ->maxLength(255)
                                     ->url(),
+                                Select::make('language')
+                                    ->label(__('partners::filament/resources/partner.form.sections.general.fields.language'))
+                                    ->options(Locale::options())
+                                    ->default(config('app.locale'))
+                                    ->searchable(),
                                 Select::make('title_id')
                                     ->label(__('partners::filament/resources/partner.form.sections.general.fields.title'))
                                     ->relationship('title', 'name')
@@ -654,6 +660,11 @@ class PartnerResource extends Resource
                                     // ->url()
                                     ->icon('heroicon-o-globe-alt')
                                     ->placeholder('—'),
+
+                                TextEntry::make('language')
+                                    ->label(__('partners::filament/resources/partner.infolist.sections.general.fields.language'))
+                                    ->formatStateUsing(fn ($state) => Locale::options()[strtolower((string) $state)] ?? strtoupper((string) $state))
+                                    ->placeholder('-'),
 
                                 TextEntry::make('title.name')
                                     ->label(__('partners::filament/resources/partner.infolist.sections.general.fields.title'))

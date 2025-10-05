@@ -2,8 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\SetLocale;
+use App\Support\Locale;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -53,11 +56,28 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Settings'),
             ])
-            ->userMenuItems([
-                'profile' => Action::make('profile')
-                    ->label(fn () => filament()->auth()->user()?->name)
-                    ->url(fn (): string => Profile::getUrl()),
-            ])
+            ->userMenuItems(array_merge(
+                [
+                    'profile' => Action::make('profile')
+                        ->label(fn () => filament()->auth()->user()?->name)
+                        ->url(fn (): string => Profile::getUrl()),
+                ],
+                $this->getLocaleUserMenuActions(),
+                [
+                    'logout' => Action::make('logout')
+                        ->label(__('Logout'))
+                        ->icon('heroicon-o-arrow-left-on-rectangle')
+                        ->requiresConfirmation()
+                        ->action(function () {
+                            Filament::auth()->logout();
+
+                            request()->session()->invalidate();
+                            request()->session()->regenerateToken();
+
+                            return redirect()->route('filament.admin.auth.login');
+                        }),
+                ],
+            ))
             ->plugins([
                 FilamentShieldPlugin::make()
                     ->gridColumns([
@@ -84,6 +104,7 @@ class AdminPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
+                SetLocale::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -93,6 +114,27 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    protected function getLocaleUserMenuActions(): array
+    {
+        $localeActions = collect(Locale::options(true))
+            ->mapWithKeys(fn (string $label, string $code) => ["locale-{$code}" => Action::make("set-locale-{$code}")
+                ->label($label)
+                ->icon(app()->getLocale() === $code ? 'heroicon-o-check' : null)
+                ->url(fn (): string => request()->fullUrlWithQuery(['locale' => $code]))
+            ])->all();
+
+        if (empty($localeActions)) {
+            return [];
+        }
+
+        return array_merge([
+            'locale-label' => Action::make('locale-label')
+                ->label(__('Language'))
+                ->icon('heroicon-o-language')
+                ->disabled(),
+        ], $localeActions);
     }
 }
 

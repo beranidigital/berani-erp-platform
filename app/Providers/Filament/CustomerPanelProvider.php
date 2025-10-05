@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\SetLocale;
+use App\Support\Locale;
+use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
@@ -39,6 +43,28 @@ class CustomerPanelProvider extends PanelProvider
                 'primary' => Color::Red,
             ])
             ->topNavigation()
+            ->userMenuItems(array_merge(
+                [
+                    'profile' => Action::make('profile')
+                        ->label(fn () => filament()->auth()->user()?->name)
+                        ->url(fn (): string => route('filament.customer.auth.profile')),
+                ],
+                $this->getLocaleUserMenuActions(),
+                [
+                    'logout' => Action::make('logout')
+                        ->label(__('Logout'))
+                        ->icon('heroicon-o-arrow-left-on-rectangle')
+                        ->requiresConfirmation()
+                        ->action(function () {
+                            Filament::auth()->logout();
+
+                            request()->session()->invalidate();
+                            request()->session()->regenerateToken();
+
+                            return redirect()->route('filament.customer.auth.login');
+                        }),
+                ],
+            ))
             ->plugins([
                 PluginManager::make(),
             ])
@@ -47,6 +73,7 @@ class CustomerPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
+                SetLocale::class . ':customer',
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -55,6 +82,27 @@ class CustomerPanelProvider extends PanelProvider
                 SetIntendedFromQuery::class,
             ])
             ->authGuard('customer');
+    }
+
+    protected function getLocaleUserMenuActions(): array
+    {
+        $localeActions = collect(Locale::options(true))
+            ->mapWithKeys(fn (string $label, string $code) => ["locale-{$code}" => Action::make("set-locale-{$code}")
+                ->label($label)
+                ->icon(app()->getLocale() === $code ? 'heroicon-o-check' : null)
+                ->url(fn (): string => request()->fullUrlWithQuery(['locale' => $code]))
+            ])->all();
+
+        if (empty($localeActions)) {
+            return [];
+        }
+
+        return array_merge([
+            'locale-label' => Action::make('locale-label')
+                ->label(__('Language'))
+                ->icon('heroicon-o-language')
+                ->disabled(),
+        ], $localeActions);
     }
 }
 
