@@ -88,6 +88,7 @@ class Employee extends Model
         'barcode',
         'pin',
         'address_id',
+        'work_address',
         'time_zone',
         'work_permit',
         'leave_manager_id',

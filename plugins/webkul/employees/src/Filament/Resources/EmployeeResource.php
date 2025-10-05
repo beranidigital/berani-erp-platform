@@ -257,13 +257,11 @@ class EmployeeResource extends Resource
                                             ->schema([
                                                 Fieldset::make(__('employees::filament/resources/employee.form.tabs.work-information.fields.location'))
                                                     ->schema([
-                                                        Select::make('address_id')
-                                                            ->relationship('companyAddress', 'name')
-                                                            ->searchable()
-                                                            ->preload()
-                                                            ->live()
-                                                            ->suffixIcon('heroicon-o-map-pin')
-                                                            ->label(__('employees::filament/resources/employee.form.tabs.work-information.fields.work-address')),
+                                                        TextInput::make('work_address')
+                                                            ->label(__('employees::filament/resources/employee.form.tabs.work-information.fields.work-address'))
+                                                            ->required()
+                                                            ->maxLength(255)
+                                                            ->suffixIcon('heroicon-o-map-pin'),
                                                         Select::make('work_location_id')
                                                             ->relationship('workLocation', 'name')
                                                             ->searchable()
@@ -1452,7 +1450,7 @@ class EmployeeResource extends Resource
                                         Group::make([
                                             Fieldset::make(__('employees::filament/resources/employee.infolist.tabs.work-information.entries.location'))
                                                 ->schema([
-                                                    TextEntry::make('companyAddress.name')
+                                                    TextEntry::make('work_address')
                                                         ->label(__('employees::filament/resources/employee.infolist.tabs.work-information.entries.work-address'))
                                                         ->placeholder('—')
                                                         ->icon('heroicon-o-map'),
