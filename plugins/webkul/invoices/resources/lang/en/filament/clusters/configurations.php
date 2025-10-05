@@ -2,7 +2,8 @@
 
 return [
     'navigation' => [
-        'title' => 'Configurations',
-        'group' => 'Invoices',
+        'title' => 'Invoices',
+        'group' => '',
     ],
 ];
+

@@ -21,4 +21,10 @@ class Configuration extends Cluster
     {
         return __('invoices::filament/clusters/configurations.navigation.group');
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        // Hide the Invoices Settings cluster from the sidebar
+        return false;
+    }
 }

@@ -33,14 +33,8 @@ class InvoicePlugin implements Plugin
                     ->discoverPages(in: $this->getPluginBasePath('/Filament/Pages'), for: 'Webkul\\Invoice\\Filament\\Pages')
                     ->discoverClusters(in: $this->getPluginBasePath('/Filament/Clusters'), for: 'Webkul\\Invoice\\Filament\\Clusters')
                     ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Invoice\\Filament\\Widgets')
-                    ->navigationItems([
-                        NavigationItem::make('settings')
-                            ->label('Settings')
-                            ->url(fn () => Products::getUrl())
-                            ->icon('heroicon-o-wrench')
-                            ->group('Invoices')
-                            ->sort(4),
-                    ]);
+                    // Remove custom Settings navigation item from Invoices
+                    ->navigationItems([]);
             });
     }
 
