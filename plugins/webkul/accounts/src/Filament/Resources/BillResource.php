@@ -129,7 +129,7 @@ class BillResource extends Resource
                                     ->disabled(fn ($record) => $record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL])),
                                 TextInput::make('reference')
                                     ->label(__('accounts::filament/resources/bill.form.section.general.fields.bill-reference'))
-                                    ->disabled(fn ($record) => $record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL])),
+                                    ->disabled(fn ($record) => $record === null || ($record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL]))),
                                 DatePicker::make('date')
                                     ->label(__('accounts::filament/resources/bill.form.section.general.fields.accounting-date'))
                                     ->default(now())
@@ -137,7 +137,7 @@ class BillResource extends Resource
                                     ->disabled(fn ($record) => $record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL])),
                                 TextInput::make('payment_reference')
                                     ->label(__('accounts::filament/resources/bill.form.section.general.fields.payment-reference'))
-                                    ->disabled(fn ($record) => $record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL])),
+                                    ->disabled(fn ($record) => $record === null || ($record && in_array($record->state, [MoveState::POSTED, MoveState::CANCEL]))),
                                 Select::make('partner_bank_id')
                                     ->relationship(
                                         'partnerBank',
