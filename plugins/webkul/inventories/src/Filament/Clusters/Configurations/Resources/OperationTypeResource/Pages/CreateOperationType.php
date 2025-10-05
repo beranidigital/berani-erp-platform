@@ -27,6 +27,10 @@ class CreateOperationType extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // Ensure required foreign keys are present
+        $data['source_location_id'] ??= OperationTypeResource::resolveDefaultSourceLocationId($data['type'] ?? null, $data['warehouse_id'] ?? null);
+        $data['destination_location_id'] ??= OperationTypeResource::resolveDefaultDestinationLocationId($data['type'] ?? null, $data['warehouse_id'] ?? null);
+
         $data['reservation_method'] = ReservationMethod::AT_CONFIRM;
 
         $data['creator_id'] = Auth::id();
