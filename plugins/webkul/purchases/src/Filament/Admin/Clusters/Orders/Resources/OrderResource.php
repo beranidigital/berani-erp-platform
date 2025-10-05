@@ -160,11 +160,39 @@ class OrderResource extends Resource
                                     ->visible(fn (OrderSettings $setting): bool => $setting->enable_purchase_agreements),
                                 Select::make('currency_id')
                                     ->label(__('purchases::filament/admin/clusters/orders/resources/order.form.sections.general.fields.currency'))
-                                    ->relationship('currency', 'name')
                                     ->required()
                                     ->searchable()
                                     ->preload()
-                                    ->default(Auth::user()->defaultCompany?->currency_id)
+                                    ->options(function (Get $get, ?Model $record) {
+                                        $base = Currency::query()
+                                            ->orderBy('name')
+                                            ->get()
+                                            ->unique('name');
+
+                                        if ($record && $record->currency_id && ! $base->contains('id', $record->currency_id)) {
+                                            $current = Currency::find($record->currency_id);
+                                            if ($current) {
+                                                $base->push($current);
+                                            }
+                                        }
+
+                                        return $base->pluck('name', 'id');
+                                    })
+                                    ->default(function () {
+                                        $defaultId = Auth::user()->defaultCompany?->currency_id;
+                                        if (! $defaultId) {
+                                            return null;
+                                        }
+
+                                        $default = Currency::find($defaultId);
+                                        if (! $default) {
+                                            return $defaultId;
+                                        }
+
+                                        return Currency::where('name', $default->name)
+                                            ->orderBy('id')
+                                            ->value('id') ?? $defaultId;
+                                    })
                                     ->disabled(fn ($record): bool => $record && ! in_array($record?->state, [OrderState::DRAFT, OrderState::SENT])),
                             ]),
 
