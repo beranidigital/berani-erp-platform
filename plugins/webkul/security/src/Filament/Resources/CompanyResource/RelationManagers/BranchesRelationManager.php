@@ -108,7 +108,11 @@ class BranchesRelationManager extends RelationManager
                                                     ->label(__('security::filament/resources/company/relation-managers/manage-branch.form.tabs.address-information.sections.address-information.fields.zip-code')),
                                                 Select::make('country_id')
                                                     ->label(__('security::filament/resources/company/relation-managers/manage-branch.form.tabs.address-information.sections.address-information.fields.country'))
-                                                    ->relationship(name: 'country', titleAttribute: 'name')
+                                                    ->relationship(
+                                                        name: 'country',
+                                                        titleAttribute: 'name',
+                                                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->selectRaw('MIN(countries.id) as id, name')->groupBy('name')
+                                                    )
                                                     ->afterStateUpdated(fn (Set $set) => $set('state_id', null))
                                                     ->searchable()
                                                     ->preload()
