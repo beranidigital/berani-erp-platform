@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Webkul\Partner\Enums\AccountType;
 use Webkul\Partner\Models\Partner;
 
@@ -98,12 +99,31 @@ class PartnerResource extends Resource
                                             ->relationship(
                                                 name: 'parent',
                                                 titleAttribute: 'name',
+                                                modifyQueryUsing: fn (Builder $query) => $query->where('account_type', AccountType::COMPANY->value),
                                             )
                                             ->visible(fn (Get $get): bool => $get('account_type') === AccountType::INDIVIDUAL)
                                             ->searchable()
                                             ->preload()
+                                            ->rules([
+                                                Rule::exists('partners_partners', 'id')->where('account_type', AccountType::COMPANY->value),
+                                            ])
                                             ->columnSpan(2)
-                                            ->createOptionForm(fn (Schema $schema): Schema => self::form($schema))
+                                            ->createOptionForm(fn (Schema $schema): Schema => $schema->components([
+                                                Hidden::make('account_type')->default(AccountType::COMPANY->value),
+                                                Hidden::make('creator_id')->default(Auth::user()?->id),
+                                                TextInput::make('name')
+                                                    ->label(__('partners::filament/resources/partner.form.sections.general.fields.name'))
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                TextInput::make('tax_id')
+                                                    ->label(__('partners::filament/resources/partner.form.sections.general.fields.tax-id'))
+                                                    ->maxLength(255),
+                                                TextInput::make('email')
+                                                    ->label(__('partners::filament/resources/partner.form.sections.general.fields.email'))
+                                                    ->email()
+                                                    ->maxLength(255)
+                                                    ->unique('partners_partners', ignoreRecord: true),
+                                            ]))
                                             ->editOptionForm(fn (Schema $schema): Schema => self::form($schema))
                                             ->createOptionAction(function (Action $action) {
                                                 $action
