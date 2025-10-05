@@ -3,7 +3,6 @@
 namespace Webkul\Support;
 
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
-use Illuminate\Support\Str;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -11,6 +10,7 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Webkul\Security\Livewire\AcceptInvitation;
 use Webkul\Security\Models\Role;
@@ -97,7 +97,7 @@ class SupportServiceProvider extends PackageServiceProvider
                     <x-filament::dropdown.list.item>
                         <div class="flex items-center gap-2">
                             <img
-                                src="{{ url('cache/logo.png') }}"
+                                src="{{ asset('images/berani.ico') }}"
                                 width="24"
                                 height="24"
                             />
@@ -121,7 +121,7 @@ class SupportServiceProvider extends PackageServiceProvider
                 $entity == 'BezhanSalleh\FilamentShield\Resources\Roles\RoleResource'
                 || $entity == 'App\Filament\Resources\RoleResource'
             ) {
-                return $affix . '_role';
+                return $affix.'_role';
             }
 
             if (class_exists($entity) && method_exists($entity, 'getModel')) {
@@ -133,18 +133,18 @@ class SupportServiceProvider extends PackageServiceProvider
                     ->replace('_', '::')
                     ->toString();
 
-                return $affix . '_' . $resourceIdentifier;
+                return $affix.'_'.$resourceIdentifier;
             }
 
             if (Str::contains($entity, 'Pages\\')) {
-                return 'page_' . Str::snake(class_basename($entity));
+                return 'page_'.Str::snake(class_basename($entity));
             }
 
             if (Str::contains($entity, 'Widgets\\') || Str::endsWith($entity, 'Widget')) {
-                return 'widget_' . Str::snake(class_basename($entity));
+                return 'widget_'.Str::snake(class_basename($entity));
             }
 
-            return $affix . '_' . Str::snake($subject);
+            return $affix.'_'.Str::snake($subject);
         });
     }
 }
