@@ -12,6 +12,11 @@ return [
         'configure-routes'                      => 'Configure Warehouse Routes',
     ],
 
+    'header-actions' => [
+        'create-warehouse-template' => 'New Warehouse Template',
+        'view-warehouses'           => 'View Warehouses',
+    ],
+
     'before-save' => [
         'notification' => [
             'warning' => [

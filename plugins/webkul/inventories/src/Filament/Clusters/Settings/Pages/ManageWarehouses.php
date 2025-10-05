@@ -3,6 +3,7 @@
 namespace Webkul\Inventory\Filament\Clusters\Settings\Pages;
 
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\SettingsPage;
@@ -49,6 +50,22 @@ class ManageWarehouses extends SettingsPage
     public static function getNavigationLabel(): string
     {
         return __('inventories::filament/clusters/settings/pages/manage-warehouses.title');
+    }
+
+    protected function getActions(): array
+    {
+        return [
+            Action::make('createWarehouseTemplate')
+                ->label(__('inventories::filament/clusters/settings/pages/manage-warehouses.header-actions.create-warehouse-template'))
+                ->icon('heroicon-o-plus-circle')
+                ->color('primary')
+                ->url(WarehouseResource::getUrl('create'))
+                ->visible(fn () => WarehouseResource::canCreate()),
+            Action::make('viewWarehouses')
+                ->label(__('inventories::filament/clusters/settings/pages/manage-warehouses.header-actions.view-warehouses'))
+                ->icon('heroicon-o-list-bullet')
+                ->url(WarehouseResource::getUrl()),
+        ];
     }
 
     public function form(Schema $schema): Schema

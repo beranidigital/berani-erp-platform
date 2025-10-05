@@ -7,13 +7,8 @@ return [
     ],
 
     'header-actions' => [
-        'create' => [
-            'label' => 'New Warehouse',
-
-            'notification' => [
-                'title' => 'Warehouse created',
-                'body'  => 'The warehouse has been created successfully.',
-            ],
+        'create-template' => [
+            'label' => 'New Warehouse Template',
         ],
     ],
 ];
