@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Auth;
 use Webkul\Account\Enums\CommunicationStandard;
 use Webkul\Account\Enums\CommunicationType;
 use Webkul\Account\Enums\JournalType;
+use Webkul\Account\Filament\Clusters\Accounts;
 use Webkul\Account\Filament\Resources\JournalResource\Pages\CreateJournal;
 use Webkul\Account\Filament\Resources\JournalResource\Pages\EditJournal;
 use Webkul\Account\Filament\Resources\JournalResource\Pages\ListJournals;
@@ -43,7 +44,9 @@ class JournalResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
+
+    protected static ?string $cluster = Accounts::class;
 
     public static function form(Schema $schema): Schema
     {

@@ -28,12 +28,14 @@ use Webkul\Account\Filament\Resources\AccountResource\Pages\EditAccount;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\ListAccounts;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\ViewAccount;
 use Webkul\Account\Models\Account;
+use Webkul\Account\Filament\Clusters\Accounts;
 
 class AccountResource extends Resource
 {
     protected static ?string $model = Account::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
+    protected static ?string $cluster = Accounts::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
 

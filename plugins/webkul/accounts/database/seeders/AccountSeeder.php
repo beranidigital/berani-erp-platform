@@ -14,11 +14,8 @@ class AccountSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('accounts_payment_method_lines')->delete();
-
-        DB::table('accounts_journals')->delete();
-
-        DB::table('accounts_accounts')->delete();
+        // Do not hard-delete related tables here to avoid FK violations.
+        // Use upsert so reseeding is idempotent and safe on existing data.
 
         $user = User::first();
 
@@ -744,6 +741,10 @@ class AccountSeeder extends Seeder
             ],
         ];
 
-        DB::table('accounts_accounts')->insert($accounts);
+        // Upsert accounts by fixed IDs to avoid duplicates and preserve references
+        $updateColumns = array_keys($accounts[0]);
+        $updateColumns = array_values(array_filter($updateColumns, fn ($col) => $col !== 'id'));
+
+        DB::table('accounts_accounts')->upsert($accounts, ['id'], $updateColumns);
     }
 }

@@ -32,6 +32,7 @@ use Webkul\Account\Filament\Resources\PaymentsResource\Pages\CreatePayments;
 use Webkul\Account\Filament\Resources\PaymentsResource\Pages\EditPayments;
 use Webkul\Account\Filament\Resources\PaymentsResource\Pages\ListPayments;
 use Webkul\Account\Filament\Resources\PaymentsResource\Pages\ViewPayments;
+use Webkul\Account\Filament\Clusters\Accounts;
 use Webkul\Account\Models\Payment;
 use Webkul\Field\Filament\Forms\Components\ProgressStepper;
 
@@ -41,7 +42,9 @@ class PaymentsResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
+
+    protected static ?string $cluster = Accounts::class;
 
     public static function form(Schema $schema): Schema
     {

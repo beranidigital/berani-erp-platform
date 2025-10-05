@@ -14,7 +14,7 @@ class JournalSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('accounts_journals')->delete();
+        // Avoid deleting journals to prevent FK violations from moves/payments.
 
         $user = User::first();
 
@@ -180,6 +180,10 @@ class JournalSeeder extends Seeder
             ],
         ];
 
-        DB::table('accounts_journals')->insert($journals);
+        // Upsert journals by fixed IDs to make reseeding idempotent
+        $updateColumns = array_keys($journals[0]);
+        $updateColumns = array_values(array_filter($updateColumns, fn ($col) => $col !== 'id'));
+
+        DB::table('accounts_journals')->upsert($journals, ['id'], $updateColumns);
     }
 }
