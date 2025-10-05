@@ -28,6 +28,7 @@ class CategoryResource extends Resource
         return [
             'index' => ListCategories::route('/'),
             'view' => ViewCategory::route('/{record}'),
+            'posts.view-without-category' => ViewPost::route('/posts/{record}'),
             'posts.by-category' => ViewPost::route('/{category}/{record}'),
         ];
     }

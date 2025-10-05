@@ -30,13 +30,22 @@ class PostResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            __('blogs::filament/customer/resources/post.global-search.category') => $record->category?->name ?? '—',
+            __('blogs::filament/customer/resources/post.global-search.category') => $record->category?->name ?? __('Uncategorized'),
         ];
     }
 
     public static function getGlobalSearchResultUrl(Model $record): string
     {
-        return CategoryResource::getUrl('posts.view', ['parent' => $record->category->slug, 'record' => $record->slug]);
+        if ($record->category) {
+            return CategoryResource::getUrl('posts.view', [
+                'category' => $record->category->slug,
+                'record' => $record->slug,
+            ]);
+        }
+
+        return CategoryResource::getUrl('posts.view-without-category', [
+            'record' => $record->slug,
+        ]);
     }
 
     public static function getGlobalSearchEloquentQuery(): Builder

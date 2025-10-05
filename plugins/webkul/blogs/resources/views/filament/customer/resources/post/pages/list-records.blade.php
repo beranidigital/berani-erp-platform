@@ -1,8 +1,13 @@
 @if ($records->count())
     <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
         @foreach ($records as $record)
+            <?php
+                $postUrl = $record->category
+                    ? self::getResource()::getUrl('posts.view', ['category' => $record->category->slug, 'record' => $record->slug])
+                    : self::getResource()::getUrl('posts.view-without-category', ['record' => $record->slug]);
+            ?>
             <div class="max-w-md overflow-hidden bg-white shadow-md rounded-xl md:max-w-2xl">
-                <a href="{{ $record->category ? self::getResource()::getUrl('posts.view', ['category' => $record->category->slug, 'record' => $record->slug]) : self::getResource()::getUrl('index')}}">
+                <a href="{{ $postUrl }}">
                     <div class="md:shrink-0">
                         @if ($record->image_url)
                             <img class="object-cover w-full h-48 md:h-full md:w-48" src="{{$record->image_url}}" alt="Blog post featured image" style="aspect-ratio: 2 / 1" />
@@ -13,7 +18,7 @@
 
                     <div class="p-6">
                         <div class="text-sm font-semibold tracking-wide uppercase text-primary-500">
-                            {{ $record->category?->name }}
+                            {{ $record->category?->name ?? __('Uncategorized') }}
                         </div>
 
                         <div class="block mt-1 text-lg font-medium leading-tight text-black">

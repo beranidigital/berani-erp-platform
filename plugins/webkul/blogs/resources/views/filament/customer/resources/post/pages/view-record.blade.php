@@ -1,4 +1,10 @@
 <x-filament-panels::page>
+    <?php
+        $postUrl = $record->category
+            ? self::getResource()::$parentResource::getUrl('posts.view', ['category' => $record->category->slug, 'record' => $record->slug])
+            : self::getResource()::$parentResource::getUrl('posts.view-without-category', ['record' => $record->slug]);
+    ?>
+
     @push('styles')
         <meta name="description" content="{{ trim($record->meta_description) != "" ? $record->meta_description : \Illuminate\Support\Str::limit(strip_tags($record->content), 120, '') }}"/>
 
@@ -22,7 +28,7 @@
 
         <meta property="og:description" content="{!! htmlspecialchars(trim(strip_tags($record->content))) !!}" />
 
-        <meta property="og:url" content="{{ self::getResource()::$parentResource::getUrl('posts.view', ['category' => $record->category->slug, 'record' => $record->slug]) }}" />
+        <meta property="og:url" content="{{ $postUrl }}" />
     @endPush
 
     @if ($record->image_url)
