@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\ColorEntry;
@@ -22,6 +23,7 @@ use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Webkul\Security\Filament\Resources\CompanyResource;
 use Webkul\TimeOff\Filament\Clusters\Configurations;
 use Webkul\TimeOff\Filament\Clusters\Configurations\Resources\MandatoryDayResource\Pages\ListMandatoryDays;
 use Webkul\TimeOff\Models\LeaveMandatoryDay;
@@ -50,6 +52,13 @@ class MandatoryDayResource extends Resource
     {
         return $schema
             ->components([
+                Select::make('company_id')
+                    ->label(__('time-off::filament/clusters/configurations/resources/mandatory-days.form.fields.company'))
+                    ->relationship('company', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm(fn (\Filament\Schemas\Schema $schema) => CompanyResource::form($schema))
+                    ->editOptionForm(fn (\Filament\Schemas\Schema $schema) => CompanyResource::form($schema)),
                 ColorPicker::make('color')
                     ->label(__('time-off::filament/clusters/configurations/resources/mandatory-days.form.fields.color'))
                     ->required()

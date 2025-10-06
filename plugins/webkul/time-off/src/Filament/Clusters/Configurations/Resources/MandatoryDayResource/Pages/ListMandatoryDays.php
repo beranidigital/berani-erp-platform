@@ -27,7 +27,8 @@ class ListMandatoryDays extends ListRecords
                 ->mutateDataUsing(function ($data) {
                     $user = Auth::user();
 
-                    $data['company_id'] = $user->default_company_id;
+                    // Respect selected company from the form; only default if empty
+                    $data['company_id'] ??= $user->default_company_id;
                     $data['creator_id'] = $user->id;
 
                     return $data;

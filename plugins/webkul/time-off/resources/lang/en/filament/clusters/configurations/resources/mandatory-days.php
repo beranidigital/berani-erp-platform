@@ -11,6 +11,7 @@ return [
 
     'form' => [
         'fields' => [
+            'company'    => 'Company',
             'name'       => 'Name',
             'start-date' => 'Start Date',
             'end-date'   => 'End Date',
