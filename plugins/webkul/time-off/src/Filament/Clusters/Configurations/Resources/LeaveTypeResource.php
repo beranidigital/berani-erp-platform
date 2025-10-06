@@ -271,8 +271,10 @@ class LeaveTypeResource extends Resource
             ])
             ->filtersFormColumns(2)
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()
+                    ->hidden(fn ($record) => $record->trashed()),
+                EditAction::make()
+                    ->hidden(fn ($record) => $record->trashed()),
                 DeleteAction::make()
                     ->successNotification(
                         Notification::make()
