@@ -22,6 +22,8 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Webkul\Account\Enums\AccountType;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\CreateAccount;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\EditAccount;
@@ -128,6 +130,23 @@ class AccountResource extends Resource
                 IconColumn::make('non_trade')
                     ->boolean()
                     ->label(__('accounts::filament/resources/account.table.columns.non-trade')),
+            ])
+            ->filters([
+                SelectFilter::make('name')
+                    ->label(__('accounts::filament/resources/account.table.columns.account-name'))
+                    ->options(fn () => \Webkul\Account\Models\Account::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'name')
+                        ->all()
+                    )
+                    ->searchable()
+                    ->multiple(),
+                SelectFilter::make('account_type')
+                    ->label(__('accounts::filament/resources/account.table.columns.account-type'))
+                    ->options(\Webkul\Account\Enums\AccountType::options())
+                    ->multiple(),
+                TernaryFilter::make('deprecated')
+                    ->label(__('accounts::filament/resources/account.table.columns.deprecated')),
             ])
             ->recordActions([
                 ViewAction::make(),
