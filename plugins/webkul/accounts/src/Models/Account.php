@@ -45,7 +45,9 @@ class Account extends Model
 
     public function taxes()
     {
-        return $this->belongsToMany(Tax::class, 'accounts_account_taxes', 'account_id', 'tax_id');
+        return $this->belongsToMany(Tax::class, 'accounts_account_taxes', 'account_id', 'tax_id')
+            ->select('accounts_taxes.*')
+            ->groupBy('accounts_taxes.id');
     }
 
     public function tags()
@@ -57,4 +59,6 @@ class Account extends Model
     {
         return $this->belongsToMany(Journal::class, 'accounts_account_journals', 'account_id', 'journal_id');
     }
+
+    
 }

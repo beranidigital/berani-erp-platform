@@ -139,7 +139,7 @@ return [
 
         'bulk-actions' => [
             'print' => [
-                'label' => 'Print Labels',
+                'label' => 'Print',
 
                 'form' => [
                     'fields' => [

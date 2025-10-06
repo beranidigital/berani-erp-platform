@@ -378,6 +378,48 @@ class ProductResource extends Resource
                         ->hidden(fn ($record) => $record->trashed()),
                     EditAction::make()
                         ->hidden(fn ($record) => $record->trashed()),
+                    Action::make('print')
+                        ->label(__('products::filament/resources/product.table.bulk-actions.print.label'))
+                        ->icon('heroicon-o-printer')
+                        ->color('gray')
+                        ->schema([
+                            TextInput::make('quantity')
+                                ->label(__('products::filament/resources/product.table.bulk-actions.print.form.fields.quantity'))
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxValue(100),
+                            Radio::make('format')
+                                ->label(__('products::filament/resources/product.table.bulk-actions.print.form.fields.format'))
+                                ->options([
+                                    'dymo'       => __('products::filament/resources/product.table.bulk-actions.print.form.fields.format-options.dymo'),
+                                    '2x7_price'  => __('products::filament/resources/product.table.bulk-actions.print.form.fields.format-options.2x7_price'),
+                                    '4x7_price'  => __('products::filament/resources/product.table.bulk-actions.print.form.fields.format-options.4x7_price'),
+                                    '4x12'       => __('products::filament/resources/product.table.bulk-actions.print.form.fields.format-options.4x12'),
+                                    '4x12_price' => __('products::filament/resources/product.table.bulk-actions.print.form.fields.format-options.4x12_price'),
+                                ])
+                                ->default('2x7_price')
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Product $record) {
+                            $pdf = PDF::loadView('products::filament.resources.products.actions.print', [
+                                'records'  => collect([$record]),
+                                'quantity' => $data['quantity'],
+                                'format'   => $data['format'],
+                            ]);
+
+                            $paperSize = match ($data['format']) {
+                                'dymo'  => [0, 0, 252.2, 144],
+                                default => 'a4',
+                            };
+
+                            $pdf->setPaper($paperSize, 'portrait');
+
+                            return response()->streamDownload(function () use ($pdf) {
+                                echo $pdf->output();
+                            }, 'Product-'.$record->name.'.pdf');
+                        })
+                        ->visible(fn ($record) => ! $record->trashed()),
                     RestoreAction::make()
                         ->successNotification(
                             Notification::make()

@@ -22,4 +22,13 @@ class CreateAccount extends CreateRecord
             ->title(__('accounts::filament/resources/account/pages/create-account.notification.title'))
             ->body(__('accounts::filament/resources/account/pages/create-account.notification.body'));
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (isset($data['invoices_account_tax']) && is_array($data['invoices_account_tax'])) {
+            $data['invoices_account_tax'] = array_values(array_unique($data['invoices_account_tax']));
+        }
+
+        return $data;
+    }
 }

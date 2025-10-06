@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('accounts_account_taxes', function (Blueprint $table) {
             $table->foreignId('account_id')->constrained('accounts_accounts')->cascadeOnDelete();
             $table->foreignId('tax_id')->constrained('accounts_taxes')->cascadeOnDelete();
+            $table->unique(['account_id', 'tax_id']);
         });
     }
 

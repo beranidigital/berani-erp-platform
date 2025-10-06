@@ -6,7 +6,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Schema; 
+use Illuminate\Database\Eloquent\Model; 
 use Webkul\Account\Filament\Resources\AccountResource;
+use Filament\Schemas\Components\Utilities\Get; 
+use Filament\Schemas\Components\Utilities\Set;
 
 class EditAccount extends EditRecord
 {
@@ -37,5 +41,14 @@ class EditAccount extends EditRecord
                         ->body(__('accounts::filament/resources/account/pages/edit-account.header-actions.delete.notification.body'))
                 ),
         ];
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['invoices_account_tax']) && is_array($data['invoices_account_tax'])) {
+            $data['invoices_account_tax'] = array_values(array_unique($data['invoices_account_tax']));
+        }
+
+        return $data;
     }
 }
