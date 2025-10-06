@@ -46,6 +46,14 @@ class PaymentsResource extends Resource
 
     protected static ?string $cluster = Accounts::class;
 
+    public static function canViewAny(): bool
+    {
+        $user = filament()->auth()->user();
+
+        // Align with policy slugs in invoices: 'view_any_payments'
+        return (bool) ($user && $user->can('view_any_payments'));
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

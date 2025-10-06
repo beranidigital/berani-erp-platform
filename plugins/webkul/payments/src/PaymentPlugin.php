@@ -3,6 +3,8 @@
 namespace Webkul\Payment;
 
 use Filament\Contracts\Plugin;
+use Filament\Navigation\NavigationItem;
+use Filament\Facades\Filament;
 use Filament\Panel;
 use ReflectionClass;
 use Webkul\Support\Package;
@@ -30,7 +32,16 @@ class PaymentPlugin implements Plugin
                 $panel->discoverResources(in: $this->getPluginBasePath('/Filament/Resources'), for: 'Webkul\\Payment\\Filament\\Resources')
                     ->discoverPages(in: $this->getPluginBasePath('/Filament/Pages'), for: 'Webkul\\Payment\\Filament\\Pages')
                     ->discoverClusters(in: $this->getPluginBasePath('/Filament/Clusters'), for: 'Webkul\\Payment\\Filament\\Clusters')
-                    ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Payment\\Filament\\Widgets');
+                    ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Payment\\Filament\\Widgets')
+                    ->navigationItems([
+                        NavigationItem::make('payments')
+                            ->label('Payments')
+                            ->url(fn () => \Webkul\Account\Filament\Resources\PaymentsResource::getUrl())
+                            ->icon('heroicon-o-banknotes')
+                            ->group('Payments')
+                            ->sort(1)
+                            ->visible(fn (): bool => \Webkul\Account\Filament\Resources\PaymentsResource::canViewAny()),
+                    ]);
             });
     }
 

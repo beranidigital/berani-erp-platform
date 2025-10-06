@@ -13,7 +13,7 @@ class PaymentMethodSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('accounts_payment_methods')->delete();
+        // Avoid deleting to prevent FK violations from accounts_payment_method_lines.
 
         $user = User::first();
 
@@ -40,6 +40,7 @@ class PaymentMethodSeeder extends Seeder
             ],
         ];
 
-        DB::table('accounts_payment_methods')->insert($paymentMethods);
+        // Upsert by ID to make reseeding idempotent
+        DB::table('accounts_payment_methods')->upsert($paymentMethods, ['id'], ['code', 'payment_type', 'name', 'created_by', 'created_at', 'updated_at']);
     }
 }
