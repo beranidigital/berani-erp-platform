@@ -263,6 +263,10 @@ class CustomerJobController
                 }
 
                 $applicantProperties = $applicant->applicant_properties ?? [];
+                // Ensure public-submitted candidate name is stored for list fallback
+                if (! empty($validated['name'])) {
+                    $applicantProperties['name'] = $validated['name'];
+                }
 
                 if ($resumePath) {
                     $applicantProperties['resume_path'] = $resumePath;

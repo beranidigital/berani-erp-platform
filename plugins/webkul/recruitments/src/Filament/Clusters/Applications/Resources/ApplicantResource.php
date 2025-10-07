@@ -44,6 +44,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\URL;
 use Webkul\Field\Filament\Forms\Components\ProgressStepper;
 use Webkul\Recruitment\Enums\ApplicationStatus;
 use Webkul\Recruitment\Enums\RecruitmentState as RecruitmentStateEnum;
@@ -429,10 +430,17 @@ class ApplicantResource extends Resource
                     ->sortable(),
                 TextColumn::make('candidate.name')
                     ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.columns.candidate-name'))
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->placeholder('-')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(function ($state, Applicant $record) {
+                        if (is_string($state) && trim($state) !== '') {
+                            return $state;
+                        }
+                        $props = is_array($record->applicant_properties) ? $record->applicant_properties : [];
+                        return $props['name'] ?? '-';
+                    }),
                 TextColumn::make('application_status')
                     ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.columns.application-status'))
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -704,7 +712,7 @@ class ApplicantResource extends Resource
                 ]),
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                $query
+                $query->with(['candidate'])
                     ->where(function (Builder $subQuery) {
                         $subQuery
                             ->where('state', '!=', RecruitmentStateEnum::BLOCKED->value)
@@ -776,11 +784,45 @@ class ApplicantResource extends Resource
                                         TextEntry::make('candidate.name')
                                             ->icon('heroicon-o-user')
                                             ->placeholder('—')
-                                            ->label(__('recruitments::filament/clusters/applications/resources/applicant.infolist.sections.general-information.entries.candidate-name')),
+                                            ->label(__('recruitments::filament/clusters/applications/resources/applicant.infolist.sections.general-information.entries.candidate-name'))
+                                            ->formatStateUsing(function ($state, Applicant $record) {
+                                                if (is_string($state) && trim($state) !== '') {
+                                                    return $state;
+                                                }
+                                                $props = is_array($record->applicant_properties) ? $record->applicant_properties : [];
+                                                return $props['name'] ?? '—';
+                                            }),
                                         TextEntry::make('candidate.email_from')
                                             ->icon('heroicon-o-envelope')
                                             ->placeholder('—')
                                             ->label(__('recruitments::filament/clusters/applications/resources/applicant.infolist.sections.general-information.entries.email')),
+                                        TextEntry::make('applicant_properties.resume_original_name')
+                                            ->icon('heroicon-o-document-text')
+                                            ->placeholder('—')
+                                            ->label(__('CV'))
+                                            ->formatStateUsing(function (Applicant $record, $state) {
+                                                $path = $record->applicant_properties['resume_path'] ?? null;
+                                                $name = $state ?? basename((string) $path);
+                                                if (! $path) {
+                                                    return '—';
+                                                }
+
+                                                $viewUrl = URL::signedRoute('recruitments.applicants.resume', [
+                                                    'applicant' => $record->id,
+                                                    'inline'    => 1,
+                                                ]);
+
+                                                $downloadUrl = URL::signedRoute('recruitments.applicants.resume', [
+                                                    'applicant' => $record->id,
+                                                ]);
+
+                                                return new \Illuminate\Support\HtmlString(
+                                                    e($name).' — '
+                                                    .'<a href="'.e($viewUrl).'" target="_blank" class="text-primary-600 hover:underline">'.__('View').'</a>'
+                                                    .' • '
+                                                    .'<a href="'.e($downloadUrl).'" class="text-primary-600 hover:underline">'.__('Download').'</a>'
+                                                );
+                                            }),
                                         TextEntry::make('candidate.phone')
                                             ->icon('heroicon-o-phone')
                                             ->placeholder('—')

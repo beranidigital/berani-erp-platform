@@ -61,7 +61,7 @@ class Applicant extends Model
         'date_opened'             => 'date',
         'date_last_stage_updated' => 'date',
         'refuse_date'             => 'date',
-        'applicant_properties'    => 'json',
+        'applicant_properties'    => 'array',
         'probability'             => 'double',
         'salary_proposed'         => 'double',
         'salary_expected'         => 'double',
@@ -84,7 +84,8 @@ class Applicant extends Model
 
     public function candidate(): BelongsTo
     {
-        return $this->belongsTo(Candidate::class);
+        // Include soft-deleted candidates so names still appear in listings
+        return $this->belongsTo(Candidate::class)->withTrashed();
     }
 
     public function skills(): HasManyThrough
