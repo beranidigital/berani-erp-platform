@@ -69,6 +69,7 @@ class AccountServiceProvider extends PackageServiceProvider
                 '2025_04_10_053349_alter_accounts_account_move_lines_table',
                 '2025_08_04_062050_alter_accounts_taxes_table',
                 '2025_08_01_091957_alter_accounts_payment_terms_table',
+                '2025_10_07_120000_add_is_default_to_accounts_taxes_table',
             ])
             ->runsMigrations()
             ->hasDependencies([

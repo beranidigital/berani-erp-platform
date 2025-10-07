@@ -30,6 +30,7 @@ use Webkul\Account\Filament\Resources\AccountResource\Pages\EditAccount;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\ListAccounts;
 use Webkul\Account\Filament\Resources\AccountResource\Pages\ViewAccount;
 use Webkul\Account\Models\Account;
+use Webkul\Account\Models\Tax;
 use Webkul\Account\Filament\Clusters\Accounts;
  
 
@@ -68,7 +69,16 @@ class AccountResource extends Resource
                                     ->live()
                                     ->searchable(),
                                 Select::make('invoices_account_tax')
-                                    ->relationship('taxes', 'name')
+                                    ->relationship('taxes', 'name', function ($query) {
+                                        // De-duplicate by name in options list
+                                        $base = $query->getQuery();
+                                        $base->columns = [];
+                                        $base->groups = null;
+                                        $base->orders = null;
+                                        $query->selectRaw('MIN(accounts_taxes.id) as id, accounts_taxes.name')
+                                            ->groupBy('accounts_taxes.name')
+                                            ->orderBy('accounts_taxes.name');
+                                    })
                                     ->label(__('accounts::filament/resources/account.form.sections.fields.default-taxes'))
                                     ->hidden(fn (Get $get) => $get('account_type') === AccountType::OFF_BALANCE->value)
                                     ->multiple()

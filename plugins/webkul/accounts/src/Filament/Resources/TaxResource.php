@@ -74,6 +74,9 @@ class TaxResource extends Resource
                                 Toggle::make('is_active')
                                     ->label(__('accounts::filament/resources/tax.form.sections.fields.status'))
                                     ->inline(false),
+                                Toggle::make('is_default')
+                                    ->label(__('accounts::filament/resources/tax.form.sections.fields.default'))
+                                    ->inline(false),
                                 TextInput::make('amount')
                                     ->label(__('accounts::filament/resources/tax.form.sections.fields.amount'))
                                     ->suffix('%')
@@ -169,6 +172,10 @@ class TaxResource extends Resource
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label(__('accounts::filament/resources/tax.table.columns.status'))
+                    ->sortable(),
+                IconColumn::make('is_default')
+                    ->boolean()
+                    ->label(__('accounts::filament/resources/tax.table.columns.default'))
                     ->sortable(),
                 IconColumn::make('include_base_amount')
                     ->boolean()

@@ -9,6 +9,7 @@ return [
                 'tax-computation' => 'Tax Computation',
                 'tax-scope'       => 'Tax Scope',
                 'status'          => 'Status',
+                'default'         => 'Default Tax',
                 'amount'          => 'Amount',
             ],
 
@@ -49,6 +50,7 @@ return [
             'price-include-override' => 'Price Include Override',
             'amount'                 => 'Amount',
             'status'                 => 'Status',
+            'default'               => 'Default',
             'include-base-amount'    => 'Include Base Amount',
             'is-base-affected'       => 'Is Base Affected',
         ],

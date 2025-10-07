@@ -36,6 +36,7 @@ class Tax extends Model implements Sortable
         'invoice_label',
         'invoice_legal_notes',
         'amount',
+        'is_default',
         'is_active',
         'include_base_amount',
         'is_base_affected',
@@ -45,6 +46,11 @@ class Tax extends Model implements Sortable
     public $sortable = [
         'order_column_name'  => 'sort',
         'sort_when_creating' => true,
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean',
+        'is_active'  => 'boolean',
     ];
 
     public function company()
@@ -94,6 +100,15 @@ class Tax extends Model implements Sortable
         static::created(function (self $tax) {
             $tax->attachDistributionForInvoice($tax);
             $tax->attachDistributionForRefund($tax);
+        });
+
+        static::saved(function (self $tax) {
+            if ($tax->is_default) {
+                static::query()
+                    ->where('company_id', $tax->company_id)
+                    ->where('id', '<>', $tax->id)
+                    ->update(['is_default' => false]);
+            }
         });
     }
 
