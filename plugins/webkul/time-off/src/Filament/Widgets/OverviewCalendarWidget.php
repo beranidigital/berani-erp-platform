@@ -24,6 +24,7 @@ use Webkul\FullCalendar\Filament\Widgets\FullCalendarWidget;
 use Webkul\TimeOff\Enums\RequestDateFromPeriod;
 use Webkul\TimeOff\Enums\State;
 use Webkul\TimeOff\Models\Leave;
+use Webkul\TimeOff\Models\CalendarLeave;
 
 class OverviewCalendarWidget extends FullCalendarWidget
 {
@@ -313,14 +314,17 @@ class OverviewCalendarWidget extends FullCalendarWidget
     {
         $user = Auth::user();
 
-        return Leave::query()
+        $events = [];
+
+        // Employee leave events
+        $leaveEvents = Leave::query()
             ->where('request_date_from', '>=', $fetchInfo['start'])
             ->where('request_date_to', '<=', $fetchInfo['end'])
             ->with('holidayStatus')
             ->get()
             ->map(function (Leave $leave) {
                 return [
-                    'id'              => $leave->id,
+                    'id'              => 'leave-'.$leave->id,
                     'title'           => $leave->holidayStatus?->name,
                     'start'           => $leave->request_date_from,
                     'end'             => $leave->request_date_to,
@@ -331,6 +335,53 @@ class OverviewCalendarWidget extends FullCalendarWidget
                 ];
             })
             ->all();
+
+        $events = array_merge($events, $leaveEvents);
+
+        // Public holiday events (red label)
+        $employee = $user?->employee;
+        $companyId = $user?->default_company_id;
+        $calendarId = $employee?->calendar?->id;
+
+        $holidayQuery = CalendarLeave::query()
+            ->where('time_type', 'leave')
+            ->where('date_from', '<=', $fetchInfo['end'])
+            ->where('date_to', '>=', $fetchInfo['start']);
+
+        if ($companyId) {
+            $holidayQuery->where(function ($q) use ($companyId) {
+                $q->whereNull('company_id')->orWhere('company_id', $companyId);
+            });
+        }
+
+        if ($calendarId) {
+            $holidayQuery->where(function ($q) use ($calendarId) {
+                $q->whereNull('calendar_id')->orWhere('calendar_id', $calendarId);
+            });
+        }
+
+        $holidayEvents = $holidayQuery
+            ->get()
+            ->map(function (CalendarLeave $holiday) {
+                return [
+                    'id'              => 'holiday-'.$holiday->id,
+                    'title'           => $holiday->name,
+                    'start'           => $holiday->date_from,
+                    'end'             => $holiday->date_to,
+                    'allDay'          => true,
+                    'backgroundColor' => '#ef4444', // red-500
+                    'borderColor'     => '#ef4444',
+                    'textColor'       => '#ffffff',
+                    'extendedProps'   => [
+                        'isPublicHoliday' => true,
+                    ],
+                ];
+            })
+            ->all();
+
+        $events = array_merge($events, $holidayEvents);
+
+        return $events;
     }
 
     public function onDateSelect(string $start, ?string $end, bool $allDay, ?array $view, ?array $resource): void
