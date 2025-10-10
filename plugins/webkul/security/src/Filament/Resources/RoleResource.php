@@ -257,4 +257,9 @@ class RoleResource extends RolesRoleResource
 
         return static::$permissions = $record->permissions()->pluck('name');
     }
+
+    public static function globallySearchable(): bool
+    {
+        return false;
+    }
 }
