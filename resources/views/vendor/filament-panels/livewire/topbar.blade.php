@@ -83,7 +83,7 @@
             />
         @endif
 
-        <div class="fi-topbar-start">
+        <div class="fi-topbar-start flex-grow" style="flex-grow:1;min-width:0;">
 
             @if ($isAdminPanel)
                 <x-filament::dropdown placement="bottom-start" width="sm">
@@ -336,14 +336,7 @@
             @endif
         @endif
 
-        <div
-            @if ($hasTenancy)
-                x-persist="topbar.end.panel-{{ filament()->getId() }}.tenant-{{ filament()->getTenant()?->getKey() }}"
-            @else
-                x-persist="topbar.end.panel-{{ filament()->getId() }}"
-            @endif
-            class="fi-topbar-end"
-        >
+        <div class="fi-topbar-end">
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE) }}
 
             @if (filament()->isGlobalSearchEnabled())

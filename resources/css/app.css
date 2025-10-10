@@ -3,5 +3,20 @@
 @layer components {
     .fi-topbar {
         background-color: #E72027 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        min-height: 60px;
+    }
+    .fi-topbar-end {
+        margin-left: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.75rem !important;
+        padding-left: 2rem !important;
+    }
+    .fi-global-search-ctn, .fi-user-menu {
+        /* Untuk memperbesar jarak antar komponen */
+        margin-right: 0.5rem;
     }
 }
