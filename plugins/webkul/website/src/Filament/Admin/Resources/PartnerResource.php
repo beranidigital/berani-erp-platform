@@ -22,7 +22,7 @@ class PartnerResource extends BasePartnerResource
 
     protected static ?string $slug = 'website/contacts';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 

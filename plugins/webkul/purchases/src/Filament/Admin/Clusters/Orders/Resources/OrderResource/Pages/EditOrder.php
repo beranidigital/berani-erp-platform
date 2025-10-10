@@ -23,11 +23,12 @@ use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\OrderResource\Actio
 use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\OrderResource\Actions\CreateBillAction;
 use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\OrderResource\Actions\SendPOEmailAction;
 use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\OrderResource\Actions\ConfirmReceiptDateAction;
+use Webkul\Support\Concerns\HasRepeaterColumnManager;
+use Webkul\Support\Traits\HasRecordNavigationTabs;
 
 class EditOrder extends EditRecord
 {
-use Webkul\Support\Concerns\HasRepeaterColumnManager;
-use Webkul\Support\Traits\HasRecordNavigationTabs;
+
 use HasRecordNavigationTabs, HasRepeaterColumnManager;
 
     protected static string $resource = OrderResource::class;

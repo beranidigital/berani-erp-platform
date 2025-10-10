@@ -7,6 +7,7 @@ use Filament\Resources\Pages\CreateRecord;
 use Webkul\Account\Enums\MoveType;
 use Webkul\Account\Facades\Account;
 use Webkul\Account\Filament\Resources\InvoiceResource;
+use Webkul\Support\Concerns\HasRepeaterColumnManager;
 
 class CreateInvoice extends CreateRecord
 {

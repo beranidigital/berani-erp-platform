@@ -12,11 +12,18 @@ use Webkul\Account\Filament\Resources\BillResource\Actions\CreditNoteAction;
 use Webkul\Account\Filament\Resources\InvoiceResource\Actions as BaseActions;
 use Webkul\Chatter\Filament\Actions as ChatterActions;
 use Webkul\Support\Concerns\HasRepeaterColumnManager;
+<<<<<<< HEAD
 use Webkul\Support\Traits\HasRecordNavigationTabs;
 
 class EditBill extends EditRecord
 {
     use HasRecordNavigationTabs, HasRepeaterColumnManager;
+=======
+
+class EditBill extends EditRecord
+{
+    use HasRepeaterColumnManager;
+>>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
 
     protected static string $resource = BillResource::class;
 

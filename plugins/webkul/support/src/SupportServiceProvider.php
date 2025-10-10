@@ -63,7 +63,7 @@ class SupportServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        include __DIR__.'/helpers.php';
+        include __DIR__ . '/helpers.php';
 
         Livewire::component('accept-invitation', AcceptInvitation::class);
 
@@ -80,19 +80,26 @@ class SupportServiceProvider extends PackageServiceProvider
         ])->where(['filename' => '[ \w\\.\\/\\-\\@\(\)\=]+']);
 
         FilamentAsset::register([
-            Css::make('support', __DIR__.'/../resources/dist/support.css'),
+            Css::make('support', __DIR__ . '/../resources/dist/support.css'),
         ], 'support');
 
-        $this->managePermissions();
+        $this->app->make(PermissionManager::class)->managePermissions();
     }
 
     public function packageRegistered(): void
     {
-        $version = '1.0.0';
+        $this->registerHooks();
+
+        $this->app->singleton(PermissionManager::class, fn () => new PermissionManager());
+    }
+
+    protected function registerHooks(): void
+    {
+        $version = '1.1.0';
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::USER_MENU_PROFILE_BEFORE,
-            fn (): string => Blade::render(<<<'BLADE'
+            fn(): string => Blade::render(<<<'BLADE'
                 <x-filament::dropdown.list>
                     <x-filament::dropdown.list.item>
                         <div class="flex items-center gap-2">
@@ -102,7 +109,7 @@ class SupportServiceProvider extends PackageServiceProvider
                                 height="24"
                             />
 
-                            Version {{$version}}
+                            {{ __('support::support.version', ['version' => $version]) }} 
                         </div>
                     </x-filament::dropdown.list.item>
                 </x-filament::dropdown.list>

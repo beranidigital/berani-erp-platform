@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Webkul\Purchase\Enums\RequisitionState;
 use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\PurchaseAgreementResource;
+use Webkul\Support\Concerns\HasRepeaterColumnManager;
 
 class CreatePurchaseAgreement extends CreateRecord
 {
@@ -22,6 +23,7 @@ class CreatePurchaseAgreement extends CreateRecord
         return [];
     }
 
+    
     protected static string $resource = PurchaseAgreementResource::class;
 
     public function getTitle(): string|Htmlable

@@ -32,7 +32,15 @@ class InvoicePlugin implements Plugin
                 $panel->discoverResources(in: $this->getPluginBasePath('/Filament/Resources'), for: 'Webkul\\Invoice\\Filament\\Resources')
                     ->discoverPages(in: $this->getPluginBasePath('/Filament/Pages'), for: 'Webkul\\Invoice\\Filament\\Pages')
                     ->discoverClusters(in: $this->getPluginBasePath('/Filament/Clusters'), for: 'Webkul\\Invoice\\Filament\\Clusters')
-                    ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Invoice\\Filament\\Widgets');
+                    ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Invoice\\Filament\\Widgets')
+                    ->navigationItems([
+                        NavigationItem::make('settings')
+                            ->label(fn () => __('invoices::app.navigation.settings.label'))
+                            ->url(fn () => Products::getUrl())
+                            ->group('Invoices')
+                            ->sort(4)
+                            ->visible(fn () => Products::canAccess()),
+                    ]);
             });
     }
 
