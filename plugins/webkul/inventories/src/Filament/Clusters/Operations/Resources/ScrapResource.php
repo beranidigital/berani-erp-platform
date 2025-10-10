@@ -13,7 +13,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
-use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Group;
@@ -69,8 +68,6 @@ class ScrapResource extends Resource
     protected static ?int $navigationSort = 5;
 
     protected static ?string $cluster = Operations::class;
-
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function getNavigationLabel(): string
     {
@@ -608,6 +605,26 @@ class ScrapResource extends Resource
                     ->columnSpan(['lg' => 1]),
             ])
             ->columns(3);
+    }
+
+    public static function getOperationSettings(): OperationSettings
+    {
+        return once(fn () => app(OperationSettings::class));
+    }
+
+    public static function getProductSettings(): ProductSettings
+    {
+        return once(fn () => app(ProductSettings::class));
+    }
+
+    public static function getTraceabilitySettings(): TraceabilitySettings
+    {
+        return once(fn () => app(TraceabilitySettings::class));
+    }
+
+    public static function getWarehouseSettings(): WarehouseSettings
+    {
+        return once(fn () => app(WarehouseSettings::class));
     }
 
     public static function getRecordSubNavigation(Page $page): array

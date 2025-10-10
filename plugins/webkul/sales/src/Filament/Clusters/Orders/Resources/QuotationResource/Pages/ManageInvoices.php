@@ -4,24 +4,21 @@ namespace Webkul\Sale\Filament\Clusters\Orders\Resources\QuotationResource\Pages
 
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Table;
 use Webkul\Account\Filament\Resources\InvoiceResource;
 use Webkul\Sale\Filament\Clusters\Orders\Resources\QuotationResource;
+use Webkul\Support\Traits\HasRecordNavigationTabs;
 
 class ManageInvoices extends ManageRelatedRecords
 {
+    use HasRecordNavigationTabs;
+
     protected static string $resource = QuotationResource::class;
 
     protected static string $relationship = 'accountMoves';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
-
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return SubNavigationPosition::Top;
-    }
 
     public static function getNavigationLabel(): string
     {

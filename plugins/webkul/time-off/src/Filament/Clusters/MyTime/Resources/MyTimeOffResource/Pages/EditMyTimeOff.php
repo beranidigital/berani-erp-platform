@@ -10,10 +10,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Webkul\Chatter\Filament\Actions as ChatterActions;
 use Webkul\TimeOff\Enums\State;
+use Webkul\Support\Traits\HasRecordNavigationTabs;
 use Webkul\TimeOff\Filament\Clusters\MyTime\Resources\MyTimeOffResource;
 
 class EditMyTimeOff extends EditRecord
 {
+    use HasRecordNavigationTabs;
+    use TimeOffHelper;
+
     protected static string $resource = MyTimeOffResource::class;
 
     protected function getRedirectUrl(): string

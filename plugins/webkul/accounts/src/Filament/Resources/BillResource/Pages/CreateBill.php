@@ -10,9 +10,21 @@ use Webkul\Account\Facades\Account;
 use Webkul\Account\Filament\Resources\BillResource;
 use Webkul\Account\Models\Move;
 use Webkul\Account\Models\Payment;
+use Webkul\Support\Concerns\HasRepeaterColumnManager;
 
 class CreateBill extends CreateRecord
 {
+    use HasRepeaterColumnManager;
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
+
     protected static string $resource = BillResource::class;
 
     protected function getRedirectUrl(): string

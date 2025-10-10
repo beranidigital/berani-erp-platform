@@ -21,7 +21,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
-use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
@@ -74,8 +73,6 @@ class PurchaseAgreementResource extends Resource
     protected static ?string $cluster = Orders::class;
 
     protected static ?int $navigationSort = 3;
-
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -611,6 +608,16 @@ class PurchaseAgreementResource extends Resource
                     ]),
             ])
             ->columns(1);
+    }
+    
+    public static function getOrderSettings(): OrderSettings
+    {
+        return once(fn () => app(OrderSettings::class));
+    }
+
+    public static function getProductSettings(): ProductSettings
+    {
+        return once(fn () => app(ProductSettings::class));
     }
 
     public static function getRecordSubNavigation(Page $page): array

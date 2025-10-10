@@ -48,8 +48,6 @@ class MyTimeOffResource extends Resource
 
     protected static ?string $cluster = MyTime::class;
 
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
-
     public static function getModelLabel(): string
     {
         return __('time-off::filament/clusters/my-time/resources/my-time-off.model-label');

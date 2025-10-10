@@ -11,6 +11,17 @@ use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\PurchaseAgreementRe
 
 class CreatePurchaseAgreement extends CreateRecord
 {
+    use HasRepeaterColumnManager;
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
+
     protected static string $resource = PurchaseAgreementResource::class;
 
     public function getTitle(): string|Htmlable

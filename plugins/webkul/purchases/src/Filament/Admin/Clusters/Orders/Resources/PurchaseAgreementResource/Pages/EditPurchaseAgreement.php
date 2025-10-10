@@ -14,6 +14,9 @@ use Webkul\Purchase\Models\Requisition;
 
 class EditPurchaseAgreement extends EditRecord
 {
+use Webkul\Support\Concerns\HasRepeaterColumnManager;
+use Webkul\Support\Traits\HasRecordNavigationTabs;
+
     protected static string $resource = PurchaseAgreementResource::class;
 
     protected function getRedirectUrl(): string

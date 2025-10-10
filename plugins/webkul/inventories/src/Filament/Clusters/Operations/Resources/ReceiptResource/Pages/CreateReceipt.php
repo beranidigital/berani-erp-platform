@@ -13,6 +13,17 @@ use Webkul\Inventory\Models\OperationType;
 
 class CreateReceipt extends CreateRecord
 {
+    use HasRepeaterColumnManager;
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
+
     protected static string $resource = ReceiptResource::class;
 
     public function getTitle(): string|Htmlable

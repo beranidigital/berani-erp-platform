@@ -12,6 +12,17 @@ use Webkul\TimeOff\Filament\Clusters\MyTime\Resources\MyTimeOffResource;
 
 class CreateMyTimeOff extends CreateRecord
 {
+    use TimeOffHelper;
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
+
     protected static string $resource = MyTimeOffResource::class;
 
     protected function getRedirectUrl(): string

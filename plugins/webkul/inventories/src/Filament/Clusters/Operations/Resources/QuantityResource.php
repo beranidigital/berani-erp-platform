@@ -8,7 +8,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -50,8 +49,6 @@ class QuantityResource extends Resource
     protected static ?int $navigationSort = 4;
 
     protected static ?string $cluster = Operations::class;
-
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function getNavigationLabel(): string
     {
@@ -527,6 +524,26 @@ class QuantityResource extends Resource
                     $query->whereNull('deleted_at');
                 });
             });
+    }
+
+    static public function getOperationSettings(): OperationSettings
+    {
+        return once(fn () => app(OperationSettings::class));
+    }
+
+    static public function getProductSettings(): ProductSettings
+    {
+        return once(fn () => app(ProductSettings::class));
+    }
+
+    static public function getTraceabilitySettings(): TraceabilitySettings
+    {
+        return once(fn () => app(TraceabilitySettings::class));
+    }
+
+    static public function getWarehouseSettings(): WarehouseSettings
+    {
+        return once(fn () => app(WarehouseSettings::class));
     }
 
     public static function getPages(): array
