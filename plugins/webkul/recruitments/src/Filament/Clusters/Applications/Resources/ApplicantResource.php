@@ -42,8 +42,8 @@ use Filament\Tables\Grouping\Group as TableGroup;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\HtmlString;
 use Webkul\Field\Filament\Forms\Components\ProgressStepper;
 use Webkul\Recruitment\Enums\ApplicationStatus;
 use Webkul\Recruitment\Enums\RecruitmentState as RecruitmentStateEnum;
@@ -400,11 +400,60 @@ class ApplicantResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('candidate.partner.name')
+                TextColumn::make('partner_display')
                     ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.columns.partner-name'))
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->searchable()
                     ->placeholder('-')
+                    ->formatStateUsing(function ($state, Applicant $record) {
+                        // Prefer explicit applicant property for partner display (set for public submissions)
+                        $props = is_array($record->applicant_properties) ? $record->applicant_properties : [];
+                        if (! empty($props['partner_display_name']) && is_string($props['partner_display_name'])) {
+                            return $props['partner_display_name'];
+                        }
+
+                        // Try candidate->partner->name
+                        $candidatePartnerName = $record->candidate?->partner?->name ?? null;
+                        if (is_string($candidatePartnerName) && trim($candidatePartnerName) !== '') {
+                            return $candidatePartnerName;
+                        }
+
+                        // Fall back to candidate name (relation first, then DB lookup)
+                        $candidateName = $record->candidate?->name ?? null;
+                        if (! is_string($candidateName) || trim($candidateName) === '') {
+                            try {
+                                $candidateModel = \Webkul\Recruitment\Models\Candidate::withTrashed()->find($record->candidate_id);
+                                $candidateName = $candidateModel?->name;
+                            } catch (\Throwable $e) {
+                                $candidateName = null;
+                            }
+                        }
+
+                        if (is_string($candidateName) && trim($candidateName) !== '') {
+                            return $candidateName;
+                        }
+
+                        // Try reading applicant_properties directly from DB as last resort
+                        try {
+                            $raw = \Illuminate\Support\Facades\DB::table('recruitments_applicants')
+                                ->where('id', $record->id)
+                                ->value('applicant_properties');
+
+                            if ($raw) {
+                                $decoded = is_string($raw) ? json_decode($raw, true) : (array) $raw;
+                                if (! empty($decoded['partner_display_name'])) {
+                                    return $decoded['partner_display_name'];
+                                }
+                                if (! empty($decoded['name'])) {
+                                    return $decoded['name'];
+                                }
+                            }
+                        } catch (\Throwable $e) {
+                            // ignore and fall through to placeholder
+                        }
+
+                        return '-';
+                    })
                     ->sortable(),
                 TextColumn::make('create_date')
                     ->date()
@@ -436,6 +485,7 @@ class ApplicantResource extends Resource
                             return $state;
                         }
                         $props = is_array($record->applicant_properties) ? $record->applicant_properties : [];
+
                         return $props['name'] ?? '-';
                     }),
                 TextColumn::make('application_status')
@@ -787,6 +837,7 @@ class ApplicantResource extends Resource
                                                     return $state;
                                                 }
                                                 $props = is_array($record->applicant_properties) ? $record->applicant_properties : [];
+
                                                 return $props['name'] ?? '—';
                                             }),
                                         TextEntry::make('candidate.email_from')

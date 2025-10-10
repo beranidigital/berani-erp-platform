@@ -70,7 +70,47 @@ class Applicant extends Model
 
     protected $appends = [
         'application_status',
+        'partner_display',
     ];
+
+    /**
+     * A displayable partner name used in lists. Falls back to applicant_properties or candidate name.
+     */
+    public function getPartnerDisplayAttribute(): ?string
+    {
+        $props = $this->applicant_properties ?? [];
+
+        if (! empty($props['partner_display_name']) && is_string($props['partner_display_name'])) {
+            return $props['partner_display_name'];
+        }
+
+        // Candidate's partner name
+        $candidatePartnerName = $this->candidate?->partner?->name ?? null;
+        if (is_string($candidatePartnerName) && trim($candidatePartnerName) !== '') {
+            return $candidatePartnerName;
+        }
+
+        // Candidate name
+        $candidateName = $this->candidate?->name ?? null;
+        if (! is_string($candidateName) || trim($candidateName) === '') {
+            try {
+                $candidateModel = \Webkul\Recruitment\Models\Candidate::withTrashed()->find($this->candidate_id);
+                $candidateName = $candidateModel?->name;
+            } catch (\Throwable $e) {
+                $candidateName = null;
+            }
+        }
+
+        if (is_string($candidateName) && trim($candidateName) !== '') {
+            return $candidateName;
+        }
+
+        if (! empty($props['name']) && is_string($props['name'])) {
+            return $props['name'];
+        }
+
+        return null;
+    }
 
     public function source(): BelongsTo
     {

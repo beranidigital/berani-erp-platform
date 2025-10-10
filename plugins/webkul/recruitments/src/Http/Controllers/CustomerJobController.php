@@ -10,16 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Webkul\Employee\Models\Department;
+use Webkul\Employee\Models\EmploymentType;
+use Webkul\Partner\Models\Partner;
 use Webkul\Recruitment\Http\Requests\StoreJobApplicationRequest;
 use Webkul\Recruitment\Models\Applicant;
 use Webkul\Recruitment\Models\Candidate;
 use Webkul\Recruitment\Models\JobPosition;
 use Webkul\Recruitment\Models\Stage;
-use Webkul\Employee\Models\Department;
-use Webkul\Employee\Models\EmploymentType;
-use Webkul\Support\Models\Company;
-use Webkul\Partner\Models\Partner;
 use Webkul\Security\Models\User;
+use Webkul\Support\Models\Company;
 use Webkul\Website\Filament\Customer\Resources\PageResource;
 use Webkul\Website\Models\Page;
 use Webkul\Website\Settings\ContactSettings;
@@ -107,16 +107,16 @@ class CustomerJobController
         Filament::setCurrentPanel('customer');
 
         return view('recruitments::customer.careers.index', [
-            'jobs'            => $jobs,
-            'customer'        => $customer,
-            'contacts'        => $this->getContacts(),
-            'socialLinks'     => $this->getSocialLinks(),
-            'title'           => __('Careers'),
-            'stats'           => $stats,
-            'filters'         => $filters,
-            'filterOptions'   => $filterOptions,
-            'activeFilters'   => $activeFilters,
-            'hasActiveFilters'=> $hasActiveFilters,
+            'jobs'                  => $jobs,
+            'customer'              => $customer,
+            'contacts'              => $this->getContacts(),
+            'socialLinks'           => $this->getSocialLinks(),
+            'title'                 => __('Careers'),
+            'stats'                 => $stats,
+            'filters'               => $filters,
+            'filterOptions'         => $filterOptions,
+            'activeFilters'         => $activeFilters,
+            'hasActiveFilters'      => $hasActiveFilters,
             'footerNavigationItems' => $this->getFooterNavigationItems(),
         ]);
     }
@@ -159,13 +159,13 @@ class CustomerJobController
         Filament::setCurrentPanel('customer');
 
         return view('recruitments::customer.careers.show', [
-            'job'         => $jobPosition,
-            'customer'    => $customer,
-            'hasApplied'  => $hasApplied,
-            'contacts'    => $this->getContacts(),
-            'socialLinks' => $this->getSocialLinks(),
-            'title'       => $jobPosition->name,
-            'relatedJobs' => $relatedJobs,
+            'job'                   => $jobPosition,
+            'customer'              => $customer,
+            'hasApplied'            => $hasApplied,
+            'contacts'              => $this->getContacts(),
+            'socialLinks'           => $this->getSocialLinks(),
+            'title'                 => $jobPosition->name,
+            'relatedJobs'           => $relatedJobs,
             'footerNavigationItems' => $this->getFooterNavigationItems(),
         ]);
     }
@@ -174,9 +174,9 @@ class CustomerJobController
     {
         try {
             \Log::info('Job application received', [
-                'job_position_id' => $jobPosition->id,
+                'job_position_id'        => $jobPosition->id,
                 'customer_authenticated' => auth('customer')->check(),
-                'request_data' => $request->all()
+                'request_data'           => $request->all(),
             ]);
 
             abort_if(! $jobPosition->is_active, 404);
@@ -223,7 +223,7 @@ class CustomerJobController
                 // Make sure creator_id is properly set before saving to prevent foreign key constraint errors
                 // When a customer submits an application, we should use the recruiter or a fallback user as creator
                 $creator_id = $candidate->creator_id ?? $jobPosition->recruiter_id ?? $fallbackCreatorId;
-                
+
                 $candidate->fill([
                     'name'              => $validated['name'],
                     'phone'             => $validated['phone'] ?? $customer?->phone,
@@ -268,6 +268,12 @@ class CustomerJobController
                     $applicantProperties['name'] = $validated['name'];
                 }
 
+                // Persist a partner display name fallback so partner column can show a value
+                // when there's no Partner record associated (e.g., public submissions)
+                if (empty($applicantProperties['partner_display_name']) && ! empty($candidate->name)) {
+                    $applicantProperties['partner_display_name'] = $candidate->name;
+                }
+
                 if ($resumePath) {
                     $applicantProperties['resume_path'] = $resumePath;
                     $applicantProperties['resume_original_name'] = $resumeOriginalName;
@@ -279,7 +285,7 @@ class CustomerJobController
 
                 // Make sure creator_id is properly set before saving
                 $applicant_creator_id = $applicant->creator_id ?? $fallbackCreatorId;
-                
+
                 $applicant->fill([
                     'company_id'       => $jobPosition->company_id,
                     'department_id'    => $jobPosition->department_id,
@@ -309,7 +315,7 @@ class CustomerJobController
                 if ($hasLogActivity) {
                     $applicant::unsetEventDispatcher();
                 }
-                
+
                 $applicant->save();
 
                 // Re-enable event dispatching if it was disabled
@@ -318,9 +324,9 @@ class CustomerJobController
                 }
 
                 \Log::info('Application saved successfully', [
-                    'candidate_id' => $candidate->id,
-                    'applicant_id' => $applicant->id,
-                    'is_new_application' => $isNewApplication
+                    'candidate_id'       => $candidate->id,
+                    'applicant_id'       => $applicant->id,
+                    'is_new_application' => $isNewApplication,
                 ]);
 
                 // Send notification to admin/recruiter about the new application
@@ -333,28 +339,28 @@ class CustomerJobController
                             payload: [
                                 'to' => [
                                     'address' => $candidate->email_from,
-                                    'name' => $candidate->name,
+                                    'name'    => $candidate->name,
                                 ],
-                                'subject' => __('Application Received for :job', ['job' => $jobPosition->name]),
-                                'record_name' => $candidate->name,
+                                'subject'      => __('Application Received for :job', ['job' => $jobPosition->name]),
+                                'record_name'  => $candidate->name,
                                 'job_position' => $jobPosition->name,
-                                'from' => [
-                                    'name' => config('app.name'),
+                                'from'         => [
+                                    'name'    => config('app.name'),
                                     'address' => config('mail.from.address'),
                                     'company' => [
-                                        'name' => config('app.name'),
+                                        'name'  => config('app.name'),
                                         'email' => config('mail.from.address'),
-                                        'phone' => config('app.phone', 'N/A')
-                                    ]
-                                ]
+                                        'phone' => config('app.phone', 'N/A'),
+                                    ],
+                                ],
                             ]
                         );
 
-                        if (!$candidateEmailSent) {
+                        if (! $candidateEmailSent) {
                             \Log::warning('Failed to send application confirmation email to candidate', [
                                 'candidate_email' => $candidate->email_from,
-                                'candidate_name' => $candidate->name,
-                                'job_position' => $jobPosition->name
+                                'candidate_name'  => $candidate->name,
+                                'job_position'    => $jobPosition->name,
                             ]);
                         }
 
@@ -367,43 +373,43 @@ class CustomerJobController
                                 payload: [
                                     'to' => [
                                         'address' => $recruiter->email,
-                                        'name' => $recruiter->name,
+                                        'name'    => $recruiter->name,
                                     ],
                                     'subject' => __('New Application for :job - :candidate', [
-                                        'job' => $jobPosition->name,
-                                        'candidate' => $candidate->name
+                                        'job'       => $jobPosition->name,
+                                        'candidate' => $candidate->name,
                                     ]),
-                                    'record_name' => $candidate->name . ' applied for ' . $jobPosition->name,
+                                    'record_name'  => $candidate->name.' applied for '.$jobPosition->name,
                                     'job_position' => $jobPosition->name,
-                                    'from' => [
-                                        'name' => config('app.name'),
+                                    'from'         => [
+                                        'name'    => config('app.name'),
                                         'address' => config('mail.from.address'),
                                         'company' => [
-                                            'name' => config('app.name'),
+                                            'name'  => config('app.name'),
                                             'email' => config('mail.from.address'),
-                                            'phone' => config('app.phone', 'N/A')
-                                        ]
-                                    ]
+                                            'phone' => config('app.phone', 'N/A'),
+                                        ],
+                                    ],
                                 ]
                             );
 
-                            if (!$recruiterEmailSent) {
+                            if (! $recruiterEmailSent) {
                                 \Log::warning('Failed to send application notification email to recruiter', [
                                     'recruiter_email' => $recruiter->email,
-                                    'recruiter_name' => $recruiter->name,
-                                    'candidate_name' => $candidate->name,
-                                    'job_position' => $jobPosition->name
+                                    'recruiter_name'  => $recruiter->name,
+                                    'candidate_name'  => $candidate->name,
+                                    'job_position'    => $jobPosition->name,
                                 ]);
                             }
                         }
                     } catch (\Exception $e) {
                         // Log the error but continue with the application process
-                        \Log::error('Error sending application emails: ' . $e->getMessage(), [
-                            'candidate_id' => $candidate->id,
+                        \Log::error('Error sending application emails: '.$e->getMessage(), [
+                            'candidate_id'    => $candidate->id,
                             'job_position_id' => $jobPosition->id,
-                            'trace' => $e->getTraceAsString()
+                            'trace'           => $e->getTraceAsString(),
                         ]);
-                        
+
                         // Even if email fails, we want to continue showing success to the user
                         // since the application data has been saved successfully
                     }
@@ -416,17 +422,17 @@ class CustomerJobController
 
             \Log::info('Redirect after successful application', [
                 'job_position_id' => $jobPosition->id,
-                'message' => $message
+                'message'         => $message,
             ]);
 
             return redirect()
                 ->route('recruitments.careers.show', $jobPosition)
                 ->with('status', $message);
         } catch (\Exception $e) {
-            \Log::error('Error during job application process: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            \Log::error('Error during job application process: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
             ]);
-            
+
             // Redirect back with an error message
             return redirect()
                 ->back()
@@ -517,5 +523,4 @@ class CustomerJobController
 
         return $navigationItems;
     }
-
 }
