@@ -12,13 +12,10 @@ use Webkul\Inventory\Enums\MoveState;
 use Webkul\Inventory\Enums\ProductTracking;
 use Webkul\Inventory\Filament\Clusters\Operations\Resources\OperationResource;
 use Webkul\Inventory\Models\MoveLine;
-<<<<<<< HEAD
 use Webkul\Support\Traits\HasRecordNavigationTabs;
 use Webkul\Inventory\Settings\OperationSettings;
 use Webkul\Inventory\Settings\TraceabilitySettings;
 use Webkul\Inventory\Settings\WarehouseSettings;
-=======
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
 
 class ManageMoves extends ManageRelatedRecords
 {

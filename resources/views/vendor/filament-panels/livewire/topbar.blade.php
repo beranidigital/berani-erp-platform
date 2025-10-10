@@ -120,7 +120,6 @@
                     </div>
                 </x-filament::dropdown>
             @endif
-        @endif
 
         <div class="fi-topbar-start" style="margin-right:0">
             @if ($isSidebarCollapsibleOnDesktop)

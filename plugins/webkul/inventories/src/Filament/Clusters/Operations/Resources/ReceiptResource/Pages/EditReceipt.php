@@ -13,18 +13,10 @@ use Webkul\Inventory\Filament\Clusters\Operations\Actions as OperationActions;
 use Webkul\Inventory\Filament\Clusters\Operations\Resources\ReceiptResource;
 use Webkul\Inventory\Models\Receipt;
 use Webkul\Support\Concerns\HasRepeaterColumnManager;
-<<<<<<< HEAD
-use Webkul\Support\Traits\HasRecordNavigationTabs;
-
-class EditReceipt extends EditRecord
-{
-    use HasRecordNavigationTabs, HasRepeaterColumnManager;
-=======
 
 class EditReceipt extends EditRecord
 {
     use HasRepeaterColumnManager;
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
 
     protected static string $resource = ReceiptResource::class;
 

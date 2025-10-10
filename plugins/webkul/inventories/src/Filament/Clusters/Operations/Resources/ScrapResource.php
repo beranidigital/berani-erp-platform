@@ -607,38 +607,22 @@ class ScrapResource extends Resource
             ->columns(3);
     }
 
-<<<<<<< HEAD
     public static function getOperationSettings(): OperationSettings
-=======
-    static public function getOperationSettings(): OperationSettings
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
     {
         return once(fn () => app(OperationSettings::class));
     }
 
-<<<<<<< HEAD
     public static function getProductSettings(): ProductSettings
-=======
-    static public function getProductSettings(): ProductSettings
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
     {
         return once(fn () => app(ProductSettings::class));
     }
 
-<<<<<<< HEAD
     public static function getTraceabilitySettings(): TraceabilitySettings
-=======
-    static public function getTraceabilitySettings(): TraceabilitySettings
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
     {
         return once(fn () => app(TraceabilitySettings::class));
     }
 
-<<<<<<< HEAD
     public static function getWarehouseSettings(): WarehouseSettings
-=======
-    static public function getWarehouseSettings(): WarehouseSettings
->>>>>>> parent of fc30dcd5 (Revert "Merge from branch source to branch berani")
     {
         return once(fn () => app(WarehouseSettings::class));
     }
