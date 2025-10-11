@@ -220,6 +220,7 @@ class PublicHolidayResource extends Resource
     {
         return [
             'index' => ListPublicHolidays::route('/'),
+            'view'  => \Webkul\TimeOff\Filament\Clusters\Configurations\Resources\PublicHolidayResource\Pages\ViewPublicHoliday::route('/{record}'),
         ];
     }
 }

@@ -204,6 +204,7 @@ class OverviewCalendarWidget extends FullCalendarWidget
                     'backgroundColor' => '#ef4444', // red-500
                     'borderColor'     => '#ef4444',
                     'textColor'       => '#ffffff',
+                    'url'             => \Webkul\TimeOff\Filament\Clusters\Configurations\Resources\PublicHolidayResource::getUrl('view', ['record' => $holiday]),
                     'extendedProps'   => [
                         'isPublicHoliday' => true,
                     ],
