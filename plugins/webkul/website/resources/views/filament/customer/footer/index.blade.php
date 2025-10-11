@@ -10,7 +10,7 @@
 					</div>
 
 					<p class="mb-4 text-white/80">
-						Designed to optimize and streamline business operations, Aureus ERP is suitable for enterprises of all sizes.
+						Designed to optimize and streamline business operations, Berani ERP is suitable for enterprises of all sizes.
 					</p>
 
 					<p class="text-white/80">
