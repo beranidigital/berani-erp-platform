@@ -25,6 +25,7 @@ class Locale
                     ? ($definition['native_label'] ?? $definition['label'] ?? strtoupper($code))
                     : ($definition['label'] ?? $definition['native_label'] ?? strtoupper($code));
                 $label = __($label);
+
                 return [$code => $label];
             })
             ->all();

@@ -12,7 +12,6 @@ use Webkul\Purchase\Enums\RequisitionState;
 use Webkul\Purchase\Filament\Admin\Clusters\Orders\Resources\PurchaseAgreementResource;
 use Webkul\Purchase\Models\Requisition;
 use Webkul\Support\Concerns\HasRepeaterColumnManager;
-use Webkul\Support\Traits\HasRecordNavigationTabs;
 
 class EditPurchaseAgreement extends EditRecord
 {

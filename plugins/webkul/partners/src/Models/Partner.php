@@ -165,4 +165,3 @@ class Partner extends Authenticatable implements FilamentUser
         return PartnerFactory::new();
     }
 }
-

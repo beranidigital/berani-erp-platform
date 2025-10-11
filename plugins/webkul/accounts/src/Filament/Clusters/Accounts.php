@@ -3,7 +3,6 @@
 namespace Webkul\Account\Filament\Clusters;
 
 use Filament\Clusters\Cluster;
-use Illuminate\Support\Facades\Gate;
 
 class Accounts extends Cluster
 {

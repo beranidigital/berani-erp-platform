@@ -29,7 +29,7 @@ class EmailService
                     'address' => config('mail.from.address'),
                     'name'    => config('mail.from.name'),
                 ];
-                
+
                 $companyInfo = config('app.name');
                 if ($companyInfo) {
                     $payload['from']['company'] = [
@@ -48,9 +48,9 @@ class EmailService
             $this->logEmail($payload['to']['address'], $payload['to']['name'], $payload['subject'], 'failed', $e->getMessage());
 
             // Log the error for debugging but don't throw it to allow the transaction to complete
-            \Log::error('Email sending failed: ' . $e->getMessage(), [
+            \Log::error('Email sending failed: '.$e->getMessage(), [
                 'payload' => $payload,
-                'trace' => $e->getTraceAsString()
+                'trace'   => $e->getTraceAsString(),
             ]);
 
             // Return false instead of throwing exception to allow application to be saved

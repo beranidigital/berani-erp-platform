@@ -6,4 +6,3 @@ return [
         'group' => 'Settings',
     ],
 ];
-

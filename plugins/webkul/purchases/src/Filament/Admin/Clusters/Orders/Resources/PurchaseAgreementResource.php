@@ -630,12 +630,12 @@ class PurchaseAgreementResource extends Resource
             ->columns(1);
     }
 
-    static public function getOrderSettings(): OrderSettings
+    public static function getOrderSettings(): OrderSettings
     {
         return once(fn () => app(OrderSettings::class));
     }
 
-    static public function getProductSettings(): ProductSettings
+    public static function getProductSettings(): ProductSettings
     {
         return once(fn () => app(ProductSettings::class));
     }

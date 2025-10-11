@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Webkul\Recruitment\Http\Controllers\ApplicantFileController;
 use Webkul\Recruitment\Http\Controllers\CustomerJobController;
 use Webkul\Support\Package;
-use Webkul\Recruitment\Http\Controllers\ApplicantFileController;
 
 if (! Package::isPluginInstalled('recruitments')) {
     return;

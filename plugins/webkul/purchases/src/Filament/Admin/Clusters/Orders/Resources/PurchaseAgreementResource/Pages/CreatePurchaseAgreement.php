@@ -23,7 +23,6 @@ class CreatePurchaseAgreement extends CreateRecord
         return [];
     }
 
-    
     protected static string $resource = PurchaseAgreementResource::class;
 
     public function getTitle(): string|Htmlable

@@ -30,15 +30,12 @@
 .fi-topbar a,
 .fi-topbar span,
 .fi-topbar button,
-.fi-topbar svg,
-.fi-topbar svg *,
 .fi-topbar .fi-user-menu-trigger,
 .fi-topbar .fi-topbar-item-btn,
 .fi-topbar .fi-topbar-item-label,
 .fi-topbar .fi-icon-btn,
 .fi-topbar .fi-database-notifications-trigger {
     color: #ffffff !important;
-    fill: currentColor !important;
 }
 
 .fi-topbar .fi-topbar-item-btn,
@@ -104,20 +101,6 @@
     padding: 0 !important;
 }
 
-.fi-topbar .fi-global-search .fi-input-inline-prefix,
-.fi-topbar .fi-global-search .fi-input-inline-suffix {
-    display: flex !important;
-    align-items: center !important;
-}
-
-.fi-topbar .fi-global-search .fi-input-inline-prefix svg,
-.fi-topbar .fi-global-search .fi-input-inline-prefix svg *,
-.fi-topbar .fi-global-search .fi-input-inline-suffix svg,
-.fi-topbar .fi-global-search .fi-input-inline-suffix svg * {
-    color: inherit !important;
-    fill: currentColor !important;
-}
-
 .fi-topbar .fi-global-search input {
     padding: 0 !important;
     min-width: 140px !important;
@@ -145,17 +128,12 @@
     color: #991B1B !important;
     border: 1px solid #FCA5A5 !important;
     box-shadow: 0 8px 24px 0 rgba(16,16,16,0.13), 0 2px 6px 0 rgba(16,16,16,0.08) !important;
-    filter: drop-shadow(0 6px 24px rgba(233,29,62,0.08));
     z-index: 9999 !important;
 }
 
 .fi-global-search-results,
 .fi-topbar .fi-global-search-results-ctn,
-.fi-global-search .fi-global-search-results-ctn,
-.fi-topbar .fi-global-search-results,
-.fi-global-search-results-ctn[style],
-.fi-global-search-dropdown,
-.fi-global-search-result-dropdown {
+.fi-global-search .fi-global-search-results-ctn {
     background: #FEF2F2 !important;
     box-shadow: 0 8px 24px rgba(16,16,16,0.16);
     border-radius: 1rem;
@@ -174,15 +152,12 @@
 /* User menu dropdown */
 .fi-user-menu .fi-dropdown-panel {
     background-color: #ffffff !important;
-    color: #1f2937 !important;
+    color: #000000 !important;
     border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-.fi-user-menu .fi-dropdown-panel *,
-.fi-user-menu .fi-dropdown-panel svg,
-.fi-user-menu .fi-dropdown-panel svg * {
+.fi-user-menu .fi-dropdown-panel * {
     color: #1f2937 !important;
-    fill: currentColor !important;
 }
 
 .fi-user-menu .fi-dropdown-list-item {
@@ -195,16 +170,6 @@
 .fi-user-menu .fi-dropdown-list-item:active {
     background-color: #f3f4f6 !important;
     color: #111827 !important;
-}
-
-.fi-user-menu .fi-dropdown-list-item .fi-badge {
-    color: inherit !important;
-}
-
-/* Topbar logo */
-.fi-topbar .fi-topbar-start img,
-.fi-topbar .fi-topbar-start svg {
-    filter: brightness(0) invert(1) !important;
 }
 
 /* Footer styling */
@@ -221,18 +186,25 @@
     color: inherit !important;
 }
 
-.fi footer svg,
-.fi-page footer svg,
-.fi-layout footer svg,
-.fi footer svg *,
-.fi-page footer svg *,
-.fi-layout footer svg * {
-    color: inherit !important;
-    fill: currentColor !important;
-}
-
 .fi footer a:hover,
 .fi-page footer a:hover,
 .fi-layout footer a:hover {
     color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Dark mode: Sidebar text and icons */
+.dark .fi-sidebar,
+.dark .fi-sidebar a,
+.dark .fi-sidebar .fi-nav-item-label,
+.dark .fi-sidebar .fi-nav-item,
+.dark .fi-sidebar .fi-icon,
+.dark .fi-sidebar .fi-nav-item .fi-icon {
+    color: #ffffff !important;
+}
+
+:not(.dark) .fi-dropdown-panel{
+    background-color: #B21518 !important;
+    box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
 }

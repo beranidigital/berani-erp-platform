@@ -28,9 +28,9 @@ return [
     ],
 
     'fields' => [
-        'avatar' => 'Profile Photo',
-        'name'   => 'Name',
-        'email'  => 'Email',
+        'avatar'   => 'Profile Photo',
+        'name'     => 'Name',
+        'email'    => 'Email',
         'language' => 'Preferred Language',
     ],
 
@@ -63,4 +63,3 @@ return [
         ],
     ],
 ];
-

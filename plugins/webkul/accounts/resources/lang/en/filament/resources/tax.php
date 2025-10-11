@@ -50,7 +50,7 @@ return [
             'price-include-override' => 'Price Include Override',
             'amount'                 => 'Amount',
             'status'                 => 'Status',
-            'default'               => 'Default',
+            'default'                => 'Default',
             'include-base-amount'    => 'Include Base Amount',
             'is-base-affected'       => 'Is Base Affected',
         ],

@@ -6,11 +6,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Schemas\Schema; 
-use Illuminate\Database\Eloquent\Model; 
 use Webkul\Account\Filament\Resources\AccountResource;
-use Filament\Schemas\Components\Utilities\Get; 
-use Filament\Schemas\Components\Utilities\Set;
 
 class EditAccount extends EditRecord
 {

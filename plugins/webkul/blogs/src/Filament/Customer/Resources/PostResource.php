@@ -39,7 +39,7 @@ class PostResource extends Resource
         if ($record->category) {
             return CategoryResource::getUrl('posts.view', [
                 'category' => $record->category->slug,
-                'record' => $record->slug,
+                'record'   => $record->slug,
             ]);
         }
 

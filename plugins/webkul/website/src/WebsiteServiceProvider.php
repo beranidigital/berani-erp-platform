@@ -9,8 +9,8 @@ use Webkul\Support\Console\Commands\InstallCommand;
 use Webkul\Support\Console\Commands\UninstallCommand;
 use Webkul\Support\Package;
 use Webkul\Support\PackageServiceProvider;
-use Webkul\Website\Http\Responses\LogoutResponse;
 use Webkul\Website\Http\Responses\LoginResponse;
+use Webkul\Website\Http\Responses\LogoutResponse;
 
 class WebsiteServiceProvider extends PackageServiceProvider
 {

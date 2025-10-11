@@ -24,4 +24,3 @@ class ApplicantFileController
         return Storage::disk('public')->download($path, $name);
     }
 }
-

@@ -4,7 +4,6 @@ namespace Webkul\Payment;
 
 use Filament\Contracts\Plugin;
 use Filament\Navigation\NavigationItem;
-use Filament\Facades\Filament;
 use Filament\Panel;
 use ReflectionClass;
 use Webkul\Support\Package;
