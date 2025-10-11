@@ -49,10 +49,8 @@
     animation: none !important;
 }
 
-.fi-topbar .fi-topbar-item-btn[aria-current='page'],
 .fi-topbar .fi-topbar-item-label[aria-current='page'] {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    border-color: rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important; /* Bold active label only */
 }
 
 .fi-topbar .fi-topbar-item-btn:hover,

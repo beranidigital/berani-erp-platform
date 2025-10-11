@@ -29,7 +29,7 @@
             {{ \Filament\Support\generate_icon_html(($active && $activeIcon) ? $activeIcon : $icon, attributes: (new \Illuminate\View\ComponentAttributeBag)->class(['fi-topbar-item-icon'])) }}
         @endif
 
-        <span class="fi-topbar-item-label">
+        <span class="fi-topbar-item-label" @if($active) aria-current="page" @endif>
             {{ $slot }}
         </span>
 
