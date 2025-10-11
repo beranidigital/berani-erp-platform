@@ -92,12 +92,14 @@ abstract class PackageServiceProvider extends BasePackageServiceProvider
                         $now->addSecond()
                     ),
                 ], "{$this->package->shortName()}-migrations");
+            }
 
-                if ($this->package->runsMigrations) {
-                    if ($this->package->isCore) {
-                        $this->loadMigrationsFrom($filePath);
-                    } elseif ($this->package->isInstalled()) {
-                        $this->loadMigrationsFrom($filePath);
+            // Ensure migrations are discoverable by `php artisan migrate`
+            if ($this->package->runsMigrations) {
+                $migrationsDir = $this->package->basePath('/../database/migrations');
+                if (is_dir($migrationsDir)) {
+                    if ($this->package->isCore || $this->package->isInstalled()) {
+                        $this->loadMigrationsFrom($migrationsDir);
                     }
                 }
             }
