@@ -3,12 +3,12 @@
 namespace Webkul\Inventory\Filament\Clusters\Configurations\Resources\WarehouseResource\Pages;
 
 use Filament\Actions\Action;
-use Illuminate\Support\Facades\Auth;
-use Webkul\Inventory\Models\Warehouse;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Support\Facades\Auth;
 use Webkul\Inventory\Filament\Clusters\Configurations\Resources\WarehouseResource;
+use Webkul\Inventory\Models\Warehouse;
 
 class ListWarehouses extends ListRecords
 {

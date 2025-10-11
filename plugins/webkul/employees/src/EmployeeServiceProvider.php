@@ -37,7 +37,7 @@ class EmployeeServiceProvider extends PackageServiceProvider
                 '2025_01_15_045708_create_job_position_skills_table',
                 '2025_01_24_052852_add_department_id_to_activity_plans_table',
                 '2025_08_20_082638_add_unique_user_id_to_employees_employees_table',
-                '2025_09_12_120000_add_work_address_to_employees_employees_table'
+                '2025_09_12_120000_add_work_address_to_employees_employees_table',
             ])
             ->runsMigrations()
             ->hasSeeder('Webkul\\Employee\\Database\Seeders\\DatabaseSeeder')

@@ -25,6 +25,7 @@ class AdminLogin extends Page
     use InteractsWithFormActions, InteractsWithForms, WithRateLimiting;
 
     protected string $view = 'filament-panels::pages.auth.login';
+
     public ?array $data = [];
 
     public function mount(): void
@@ -41,6 +42,7 @@ class AdminLogin extends Page
             $this->rateLimit(5);
         } catch (TooManyRequestsException $e) {
             $this->getRateLimitedNotification($e)?->send();
+
             return null;
         }
 

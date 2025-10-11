@@ -48,7 +48,6 @@ use Webkul\Security\Filament\Resources\CompanyResource\Pages\ViewCompany;
 use Webkul\Security\Filament\Resources\CompanyResource\RelationManagers\BranchesRelationManager;
 use Webkul\Security\Models\User;
 use Webkul\Support\Models\Company;
-use Webkul\Support\Models\Country;
 use Webkul\Support\Models\Currency;
 
 class CompanyResource extends Resource

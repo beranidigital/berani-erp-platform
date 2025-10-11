@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('icon-contacts'),
                 NavigationGroup::make()
                     ->label(__('admin.navigation.sale'))
-                    ->icon('icon-sales'),
+                     ->icon('icon-sales'),
                 NavigationGroup::make()
                     ->label(__('admin.navigation.purchase'))
                     ->icon('icon-purchases'),

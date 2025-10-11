@@ -17,15 +17,15 @@ use Webkul\FullCalendar\Filament\Actions\EditAction;
 use Webkul\FullCalendar\Filament\Actions\ViewAction;
 use Webkul\FullCalendar\Filament\Widgets\FullCalendarWidget;
 use Webkul\TimeOff\Enums\State;
-use Webkul\TimeOff\Models\Leave;
 use Webkul\TimeOff\Models\CalendarLeave;
+use Webkul\TimeOff\Models\Leave;
 use Webkul\TimeOff\Traits\TimeOffHelper;
 
 class OverviewCalendarWidget extends FullCalendarWidget
 {
+    use HasWidgetShield;
     use TimeOffHelper;
 
-     use HasWidgetShield;
     public Model|string|null $model = Leave::class;
 
     public function getHeading(): string|Htmlable|null

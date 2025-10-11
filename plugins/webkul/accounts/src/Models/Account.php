@@ -59,6 +59,4 @@ class Account extends Model
     {
         return $this->belongsToMany(Journal::class, 'accounts_account_journals', 'account_id', 'journal_id');
     }
-
-    
 }

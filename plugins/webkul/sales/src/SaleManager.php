@@ -391,6 +391,7 @@ class SaleManager
         } else {
             $line->invoice_status = InvoiceStatus::NO;
         }
+
         return $line;
     }
 

@@ -67,4 +67,3 @@ class LoginResponse implements LoginResponseContract
         return rtrim($path, '/') ?: '/';
     }
 }
-

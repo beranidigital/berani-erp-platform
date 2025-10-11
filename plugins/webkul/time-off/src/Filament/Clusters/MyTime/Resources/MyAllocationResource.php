@@ -151,6 +151,7 @@ class MyAllocationResource extends Resource
                 TextColumn::make('allocation_type')
                     ->formatStateUsing(function ($state) {
                         $key = $state instanceof AllocationType ? $state->value : $state;
+
                         return AllocationType::options()[$key] ?? (is_string($key) ? $key : '—');
                     })
                     ->label(__('time-off::filament/clusters/my-time/resources/my-allocation.table.columns.allocation-type'))

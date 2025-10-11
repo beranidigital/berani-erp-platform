@@ -28,6 +28,3 @@ class SetIntendedFromQuery
         return $next($request);
     }
 }
-
-
-

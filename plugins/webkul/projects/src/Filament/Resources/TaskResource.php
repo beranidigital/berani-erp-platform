@@ -842,12 +842,12 @@ class TaskResource extends Resource
             ->columns(3);
     }
 
-    static private function getTimeSettings(): TimeSettings
+    private static function getTimeSettings(): TimeSettings
     {
         return once(fn () => app(TimeSettings::class));
     }
 
-    static private function getTaskSettings(): TaskSettings
+    private static function getTaskSettings(): TaskSettings
     {
         return once(fn () => app(TaskSettings::class));
     }

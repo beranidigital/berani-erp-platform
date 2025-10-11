@@ -130,7 +130,7 @@ class TimesheetResource extends Resource
                         $formattedHours = floor($state);
                         $formattedMinutes = round(($state - $formattedHours) * 60);
 
-                        return $formattedHours . ' Hour' . ($formattedHours != 1 ? 's' : '') . ' ' . $formattedMinutes . ' Minute' . ($formattedMinutes != 1 ? 's' : '');
+                        return $formattedHours.' Hour'.($formattedHours != 1 ? 's' : '').' '.$formattedMinutes.' Minute'.($formattedMinutes != 1 ? 's' : '');
                     })
                     ->sortable()
                     ->summarize([
@@ -140,7 +140,7 @@ class TimesheetResource extends Resource
                                 $formattedHours = floor($state);
                                 $formattedMinutes = round(($state - $formattedHours) * 60);
 
-                                return $formattedHours . ' Hour' . ($formattedHours != 1 ? 's' : '') . ' ' . $formattedMinutes . ' Minute' . ($formattedMinutes != 1 ? 's' : '');
+                                return $formattedHours.' Hour'.($formattedHours != 1 ? 's' : '').' '.$formattedMinutes.' Minute'.($formattedMinutes != 1 ? 's' : '');
                             }),
                     ]),
                 TextColumn::make('created_at')
@@ -163,11 +163,10 @@ class TimesheetResource extends Resource
                 Group::make('project.name')
                     ->label(__('timesheets::filament/resources/timesheet.table.groups.project')),
                 Group::make('task.title')
-                    ->label(__('timesheets::filament/resources/timesheet.table.groups.task'))
-,
+                    ->label(__('timesheets::filament/resources/timesheet.table.groups.task')),
                 Group::make('creator.name')
-                    ->label(__('timesheets::filament/resources/timesheet.table.groups.creator'))
-])
+                    ->label(__('timesheets::filament/resources/timesheet.table.groups.creator')),
+            ])
             ->filters([
                 Filter::make('date')
                     ->schema([

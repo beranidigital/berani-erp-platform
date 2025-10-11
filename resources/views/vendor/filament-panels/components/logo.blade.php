@@ -40,10 +40,16 @@
             {{
                 $attributes->class([
                     $getLogoClasses($isDarkMode),
-                ])
+                ])->style([$logoStyles])
             }}
         >
-            {{ $brandName }}
+            {{-- Render a minimal inline SVG mark that inherits currentColor so CSS can tint it --}}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 24" aria-hidden="true" focusable="false">
+                <title>{{ $brandName }}</title>
+                <g fill="currentColor">
+                    <text x="0" y="16" font-family="Inter, Arial, Helvetica, sans-serif" font-size="16" font-weight="700">BERANI</text>
+                </g>
+            </svg>
         </div>
     @endif
 @endcapture

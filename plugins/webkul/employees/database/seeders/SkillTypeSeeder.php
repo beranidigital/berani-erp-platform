@@ -3,9 +3,8 @@
 namespace Webkul\Employee\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Webkul\Security\Models\User;
-use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\DB;
+use Webkul\Security\Models\User;
 
 class SkillTypeSeeder extends Seeder
 {

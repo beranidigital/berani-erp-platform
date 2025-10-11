@@ -710,7 +710,7 @@ class SkillSeeder extends Seeder
                 'creator_id'         => $user?->id,
                 'updated_at'         => now(),
             ],
-                        [
+            [
                 'sort'          => 10,
                 'skill_type_id' => 6,
                 'name'          => 'Welding',

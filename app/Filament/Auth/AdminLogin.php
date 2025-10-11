@@ -6,6 +6,7 @@ use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
 use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
@@ -13,8 +14,6 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Pages\Page;
-use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 use Illuminate\Auth\EloquentUserProvider;
@@ -24,6 +23,7 @@ use Illuminate\Validation\ValidationException;
 class AdminLogin extends BaseLogin
 {
     use InteractsWithFormActions, InteractsWithForms, WithRateLimiting;
+
     public ?array $data = [];
 
     public function mount(): void
@@ -40,6 +40,7 @@ class AdminLogin extends BaseLogin
             $this->rateLimit(5);
         } catch (TooManyRequestsException $e) {
             $this->getRateLimitedNotification($e)?->send();
+
             return null;
         }
 
@@ -159,5 +160,3 @@ class AdminLogin extends BaseLogin
         return true;
     }
 }
-
-
