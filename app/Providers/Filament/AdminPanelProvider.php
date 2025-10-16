@@ -58,6 +58,10 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label(__('admin.navigation.dashboard'))
                     ->icon('icon-dashboard'),
+                // Match the plugin-defined group name exactly so the icon applies
+                NavigationGroup::make()
+                    ->label('Payments')
+                    ->icon('icon-payment'),
                 NavigationGroup::make()
                     ->label(__('admin.navigation.contact'))
                     ->icon('icon-contacts'),
@@ -151,4 +155,3 @@ class AdminPanelProvider extends PanelProvider
         ], $localeActions);
     }
 }
-

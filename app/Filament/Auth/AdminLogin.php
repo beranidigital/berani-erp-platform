@@ -75,7 +75,10 @@ class AdminLogin extends BaseLogin
         $guard->login($user, $data['remember'] ?? false);
         session()->regenerate();
 
-        return app(LoginResponse::class);
+        // Ensure Livewire triggers a client-side redirect without requiring a manual refresh
+        $this->redirectIntended(Filament::getUrl(), navigate: true);
+
+        return null;
     }
 
     protected function getRateLimitedNotification(TooManyRequestsException $e): ?Notification

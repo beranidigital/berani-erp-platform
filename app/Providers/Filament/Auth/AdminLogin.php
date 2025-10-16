@@ -77,7 +77,9 @@ class AdminLogin extends Page
         $guard->login($user, $data['remember'] ?? false);
         session()->regenerate();
 
-        return app(LoginResponse::class);
+        $this->redirectIntended(Filament::getUrl(), navigate: true);
+
+        return null;
     }
 
     protected function getRateLimitedNotification(TooManyRequestsException $e): ?Notification

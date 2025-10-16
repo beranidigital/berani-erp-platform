@@ -1,6 +1,12 @@
 @php
     $brandName = filament()->getBrandName();
+    // Default logo from panel config
     $brandLogo = filament()->getBrandLogo();
+    // Use red logo specifically on admin login page
+    $currentPath = request()->path();
+    if ($currentPath === 'admin/login') {
+        $brandLogo = asset('images/berani-logo-red.svg');
+    }
     $brandLogoHeight = filament()->getBrandLogoHeight() ?? '1.5rem';
     $darkModeBrandLogo = filament()->getDarkModeBrandLogo();
     $hasDarkModeBrandLogo = filled($darkModeBrandLogo);
