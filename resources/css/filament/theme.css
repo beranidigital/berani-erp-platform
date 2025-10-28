@@ -132,11 +132,21 @@
 .fi-global-search-results,
 .fi-topbar .fi-global-search-results-ctn,
 .fi-global-search .fi-global-search-results-ctn {
-    background: #FEF2F2 !important;
+    background: white !important;
     box-shadow: 0 8px 24px rgba(16,16,16,0.16);
     border-radius: 1rem;
-    color: #991B1B !important;
-    border: 1px solid #FCA5A5 !important;
+    color: black !important;
+    border: 2px solid #FCA5A5 !important;
+    z-index: 2222 !important;
+    padding: 0.5rem 0 !important;
+}
+
+.dark .fi-global-search .fi-global-search-results-ctn {
+    background: black !important;
+    box-shadow: 0 8px 24px rgba(16,16,16,0.16);
+    border-radius: 1rem;
+    color: white !important;
+    border: 2px solid #FCA5A5 !important;
     z-index: 2222 !important;
     padding: 0.5rem 0 !important;
 }
@@ -201,8 +211,8 @@
 }
 
 :not(.dark) .fi-dropdown-panel{
-    background-color: #B21518 !important;
-    box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
-    -webkit-box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
-    -moz-box-shadow: 4px 7px 6px 1px rgba(0,0,0,0.75);
+    background-color: white !important;
+    box-shadow: 2px 5px 4px 0px rgba(0,0,0,0.50);
+    -webkit-box-shadow: 2px 5px 4px 0px rgba(0,0,0,0.50);
+    -moz-box-shadow: 2px 5px 4px 0px rgba(0,0,0,0.50);
 }
