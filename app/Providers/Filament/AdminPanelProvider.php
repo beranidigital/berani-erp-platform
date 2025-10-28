@@ -60,7 +60,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('icon-dashboard'),
                 // Match the plugin-defined group name exactly so the icon applies
                 NavigationGroup::make()
-                    ->label('Payments')
+                    ->label('Account')
                     ->icon('icon-payment'),
                 NavigationGroup::make()
                     ->label(__('admin.navigation.contact'))

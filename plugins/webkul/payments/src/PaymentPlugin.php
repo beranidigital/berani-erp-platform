@@ -34,10 +34,10 @@ class PaymentPlugin implements Plugin
                     ->discoverWidgets(in: $this->getPluginBasePath('/Filament/Widgets'), for: 'Webkul\\Payment\\Filament\\Widgets')
                     ->navigationItems([
                         NavigationItem::make('payments')
-                            ->label('Payments')
+                            ->label('Account')
                             ->url(fn () => \Webkul\Account\Filament\Resources\PaymentsResource::getUrl())
                             ->icon('heroicon-o-banknotes')
-                            ->group('Payments')
+                            ->group('Account')
                             ->sort(1)
                             ->visible(fn (): bool => \Webkul\Account\Filament\Resources\PaymentsResource::canViewAny()),
                     ]);
