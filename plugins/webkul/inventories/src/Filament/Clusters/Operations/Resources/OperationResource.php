@@ -47,6 +47,7 @@ use Webkul\Inventory\Enums\ProductTracking;
 use Webkul\Inventory\Facades\Inventory;
 use Webkul\Inventory\Filament\Clusters\Products\Resources\LotResource;
 use Webkul\Inventory\Filament\Clusters\Products\Resources\PackageResource;
+use Webkul\Inventory\Filament\Clusters\Products\Resources\ProductResource;
 use Webkul\Inventory\Models\Move;
 use Webkul\Inventory\Models\Operation;
 use Webkul\Inventory\Models\OperationType;
@@ -242,9 +243,11 @@ class OperationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderableColumns()
+            ->columnManagerColumns(2)
             ->columns([
                 IconColumn::make('is_favorite')
-                    ->label('')
+                    ->label(__('inventories::filament/clusters/operations/resources/operation.table.columns.favorite'))
                     ->icon(fn (Operation $record): string => $record->is_favorite ? 'heroicon-s-star' : 'heroicon-o-star')
                     ->color(fn (Operation $record): string => $record->is_favorite ? 'warning' : 'gray')
                     ->action(function (Operation $record): void {
@@ -741,7 +744,7 @@ class OperationResource extends Resource
                     ->maxValue(99999999999)
                     ->default(0)
                     ->required()
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, Get $get) => static::afterProductUOMQtyUpdated($set, $get))
                     ->disabled(fn (?Move $record): bool => $record?->id && $record?->state !== MoveState::DRAFT),
                 TextInput::make('quantity')
@@ -813,6 +816,20 @@ class OperationResource extends Resource
 
                 return $data;
             })
+            ->extraItemActions([
+                Action::make('openProduct')
+                    ->tooltip('Open product')
+                    ->icon('heroicon-m-arrow-top-right-on-square')
+                    ->url(
+                        fn (array $arguments, Get $get): ?string => ProductResource::getUrl('edit', [
+                            'record' => $get("moves.{$arguments['item']}.product_id"),
+                        ])
+                    )
+                    ->openUrlInNewTab()
+                    ->visible(
+                        fn (array $arguments, Get $get): bool => filled($get("moves.{$arguments['item']}.product_id"))
+                    ),
+            ])
             ->deletable(fn ($record): bool => ! in_array($record?->state, [OperationState::DONE, OperationState::CANCELED]))
             ->addable(fn ($record): bool => ! in_array($record?->state, [OperationState::DONE, OperationState::CANCELED]));
     }

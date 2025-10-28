@@ -626,7 +626,7 @@ class ApplicantResource extends Resource
             ])
             ->filters([
                 QueryBuilder::make()
-                    ->constraintPickerColumns(5)
+                    ->constraintPickerColumns(2)
                     ->constraints([
                         RelationshipConstraint::make('source')
                             ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.filters.source'))
@@ -661,17 +661,9 @@ class ApplicantResource extends Resource
                                     ->multiple()
                                     ->preload(),
                             ),
-                        RelationshipConstraint::make('date_last_stage_updated')
+                        DateConstraint::make('date_last_stage_updated')
                             ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.filters.date-last-stage-updated'))
-                            ->icon('heroicon-o-user-circle')
-                            ->multiple()
-                            ->selectable(
-                                IsRelatedToOperator::make()
-                                    ->titleAttribute('name')
-                                    ->searchable()
-                                    ->multiple()
-                                    ->preload(),
-                            ),
+                            ->icon('heroicon-o-user-circle'),
                         RelationshipConstraint::make('stage')
                             ->label(__('recruitments::filament/clusters/applications/resources/applicant.table.filters.stage'))
                             ->icon('heroicon-o-user-circle')
@@ -760,9 +752,8 @@ class ApplicantResource extends Resource
             ])
             ->modifyQueryUsing(function (Builder $query) {
                 $query->with(['candidate'])
-                    ->where(function (Builder $subQuery) {
-                        $subQuery
-                            ->where('state', '!=', RecruitmentStateEnum::BLOCKED->value)
+                    ->where(function ($subQuery) {
+                   $subQuery->where('state', '!=', RecruitmentStateEnum::BLOCKED->value)
                             ->orWhereNull('state');
                     });
             });

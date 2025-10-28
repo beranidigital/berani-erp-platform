@@ -97,7 +97,10 @@ class PartnerResource extends Resource
                                             ->relationship(
                                                 name: 'parent',
                                                 titleAttribute: 'name',
-                                                modifyQueryUsing: fn (Builder $query) => $query->where('account_type', AccountType::COMPANY->value),
+                                                modifyQueryUsing: fn ($query) => $query->where(function ($q) {
+                                                    $q->where('account_type', 'company')
+                                                        ->orWhere('sub_type', 'company');
+                                                })
                                             )
                                             ->visible(fn (Get $get): bool => $get('account_type') === AccountType::INDIVIDUAL)
                                             ->searchable()
@@ -546,7 +549,7 @@ class PartnerResource extends Resource
                             ->body(__('partners::filament/resources/partner.table.actions.delete.notification.body')),
                     ),
                 ForceDeleteAction::make()
-                    ->action(function (Partner $record) {
+                    ->action(function (ForceDeleteAction $action, Partner $record) {
                         try {
                             $record->forceDelete();
                         } catch (QueryException $e) {
@@ -555,6 +558,8 @@ class PartnerResource extends Resource
                                 ->title(__('partners::filament/resources/partner.table.actions.force-delete.notification.error.title'))
                                 ->body(__('partners::filament/resources/partner.table.actions.force-delete.notification.error.body'))
                                 ->send();
+                            $action->cancel();
+
                         }
                     })
                     ->successNotification(
@@ -581,7 +586,7 @@ class PartnerResource extends Resource
                                 ->body(__('partners::filament/resources/partner.table.bulk-actions.delete.notification.body')),
                         ),
                     ForceDeleteBulkAction::make()
-                        ->action(function (Collection $records) {
+                        ->action(function (ForceDeleteBulkAction $action, Collection $records) {
                             try {
                                 $records->each(fn (Model $record) => $record->forceDelete());
                             } catch (QueryException $e) {
@@ -590,6 +595,8 @@ class PartnerResource extends Resource
                                     ->title(__('partners::filament/resources/partner.table.bulk-actions.force-delete.notification.error.title'))
                                     ->body(__('partners::filament/resources/partner.table.bulk-actions.force-delete.notification.error.body'))
                                     ->send();
+                                $action->cancel();
+
                             }
                         })
                         ->successNotification(

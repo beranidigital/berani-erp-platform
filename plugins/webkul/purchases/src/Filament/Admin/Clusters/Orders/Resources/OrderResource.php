@@ -26,6 +26,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Webkul\Account\Enums\TypeTaxUse;
 use Webkul\Account\Facades\Tax as TaxFacade;
@@ -53,6 +55,7 @@ use Webkul\Product\Enums\ProductType;
 use Webkul\Product\Models\Packaging;
 use Webkul\Purchase\Enums\OrderState;
 use Webkul\Purchase\Enums\QtyReceivedMethod;
+use Webkul\Purchase\Filament\Admin\Clusters\Products\Resources\ProductResource;
 use Webkul\Purchase\Livewire\Summary;
 use Webkul\Purchase\Models\Order;
 use Webkul\Purchase\Models\Product;
@@ -314,9 +317,11 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderableColumns()
+            ->columnManagerColumns(2)
             ->columns(static::mergeCustomTableColumns([
                 IconColumn::make('priority')
-                    ->label('')
+                    ->label(__('purchases::filament/admin/clusters/orders/resources/order.table.columns.favorite'))
                     ->icon(fn (Order $record): string => $record->priority ? 'heroicon-s-star' : 'heroicon-o-star')
                     ->color(fn (Order $record): string => $record->priority ? 'warning' : 'gray')
                     ->action(function (Order $record): void {
@@ -550,6 +555,15 @@ class OrderResource extends Resource
 
                 Section::make(__('purchases::filament/admin/clusters/orders/resources/order.infolist.sections.general.title'))
                     ->schema([
+                        Grid::make()
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->placeholder('-')
+                                    ->label(__('purchases::filament/admin/clusters/orders/resources/order.infolist.sections.general.entries.purchase-order'))
+                                    ->icon('heroicon-o-document')
+                                    ->weight('bold')
+                                    ->size(TextSize::Large),
+                            ])->columns(2),
                         Grid::make(2)
                             ->schema([
                                 Group::make([
@@ -794,11 +808,35 @@ class OrderResource extends Resource
                     ->relationship(
                         'product',
                         'name',
-                        fn ($query) => $query->where('type', ProductType::GOODS)->whereNull('is_configurable'),
+                        fn ($query) => $query->where('type', ProductType::GOODS)->withTrashed()->whereNull('is_configurable'),
                     )
                     ->searchable()
                     ->preload()
                     ->live()
+                    ->getOptionLabelFromRecordUsing(function ($record): string {
+                        return $record->name.($record->trashed() ? ' (Deleted)' : '');
+                    })
+                    ->disableOptionWhen(function ($value, $state, $component, $label) {
+                        if (str_contains($label, ' (Deleted)')) {
+                            return true;
+                        }
+
+                        $repeater = $component->getParentRepeater();
+                        if (! $repeater) {
+                            return false;
+                        }
+
+                        return collect($repeater->getState())
+                            ->pluck(
+                                (string) str($component->getStatePath())
+                                    ->after("{$repeater->getStatePath()}.")
+                                    ->after('.'),
+                            )
+                            ->flatten()
+                            ->diff(Arr::wrap($state))
+                            ->filter(fn (mixed $siblingItemState): bool => filled($siblingItemState))
+                            ->contains($value);
+                    })
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         static::afterProductUpdated($set, $get);
                     })
@@ -827,7 +865,7 @@ class OrderResource extends Resource
                     ->default(1)
                     ->numeric()
                     ->maxValue(99999999999)
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         static::afterProductQtyUpdated($set, $get);
                     })
@@ -864,7 +902,7 @@ class OrderResource extends Resource
                     ->disabled(fn ($record): bool => in_array($record?->order->state, [OrderState::PURCHASE, OrderState::DONE, OrderState::CANCELED])),
                 TextInput::make('product_packaging_qty')
                     ->label(__('purchases::filament/admin/clusters/orders/resources/order.form.tabs.products.repeater.products.fields.packaging-qty'))
-                    ->live()
+                    ->live(onBlur: true)
                     ->numeric()
                     ->maxValue(99999999999)
                     ->afterStateUpdated(function (Set $set, Get $get) {
@@ -893,7 +931,7 @@ class OrderResource extends Resource
                     ->minValue(0)
                     ->maxValue(99999999999)
                     ->required()
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         self::calculateLineTotals($set, $get);
                     })
@@ -921,7 +959,7 @@ class OrderResource extends Resource
                     ->default(0)
                     ->minValue(0)
                     ->maxValue(100)
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         self::calculateLineTotals($set, $get);
                     })
@@ -959,7 +997,22 @@ class OrderResource extends Resource
                 ]);
 
                 return $data;
-            });
+            })->extraItemActions([
+                Action::make('openProduct')
+                    ->tooltip('Open product')
+                    ->icon('heroicon-m-arrow-top-right-on-square')
+                    ->url(function (array $arguments, Get $get): ?string {
+                        $productId = $get("products.{$arguments['item']}.product_id");
+
+                        if (! $productId) {
+                            return null;
+                        }
+
+                        return ProductResource::getUrl('edit', ['record' => $productId]);
+                    }, shouldOpenInNewTab: true)
+                    ->hidden(fn (array $arguments, Get $get): bool => empty($get("products.{$arguments['item']}.product_id"))
+                    ),
+            ]);
     }
 
     private static function afterProductUpdated(Set $set, Get $get): void
@@ -1186,5 +1239,11 @@ class OrderResource extends Resource
     public static function getProductSettings(): ProductSettings
     {
         return once(fn () => app(ProductSettings::class));
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->orderByDesc('id');
     }
 }

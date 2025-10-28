@@ -102,6 +102,20 @@ return [
                                         'title' => 'Product added',
                                         'body'  => 'The product has been added successfully.',
                                     ],
+
+                                    'product-not-found' => [
+                                        'title' => 'Product Not Found',
+                                    ],
+
+                                    'product-already-exists' => [
+                                        'title' => 'Product Already Exists',
+                                        'body'  => 'This product is already in the order lines. Please update the existing line instead.',
+                                    ],
+
+                                    'missing-product-data' => [
+                                        'title' => 'Missing Product Data',
+                                        'body'  => 'Unable to process the selected product.',
+                                    ],
                                 ],
                             ],
                         ],
@@ -261,6 +275,7 @@ return [
             'general' => [
                 'title'   => 'General',
                 'entries' => [
+                    'sale-order'     => 'Sales Order',
                     'customer'       => 'Customer',
                     'expiration'     => 'Expiration',
                     'quotation-date' => 'Quotation Date',

@@ -281,6 +281,7 @@ class CompanyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderableColumns()
             ->columns(static::mergeCustomTableColumns([
                 ImageColumn::make('partner.avatar')
                     ->circular()
@@ -363,10 +364,10 @@ class CompanyResource extends Resource
                 Tables\Filters\SelectFilter::make('is_active')
                     ->label(__('security::filament/resources/company.table.filters.status'))
                     ->options(CompanyStatus::options()),
-                SelectFilter::make('country')
+                SelectFilter::make('country_id')
                     ->label(__('security::filament/resources/company.table.filters.country'))
                     ->multiple()
-                    ->relationship('country', 'name')
+                    ->relationship(name: 'country', titleAttribute: 'name')
                     ->searchable(),
             ]))
             ->filtersFormColumns(2)

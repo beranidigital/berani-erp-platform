@@ -86,8 +86,8 @@
         <div class="fi-topbar-start flex-grow" style="flex-grow:1;min-width:0;">
 
             @if ($isAdminPanel)
-                <x-filament::dropdown placement="bottom-start" width="sm">
-                    <x-slot name="trigger">
+                <x-filament::dropdown placement="bottom-start" teleport width="sm">
+                    <x-slot name="trigger">  
                         <x-filament::icon-button
                             :icon="\Filament\Support\Icons\Heroicon::OutlinedBars3"
                         />
