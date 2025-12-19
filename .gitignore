@@ -21,12 +21,9 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
-<<<<<<< HEAD
 AGENTS.md
-=======
 
 /playwright-report
 /test-results
->>>>>>> e0f15407b9d3b0ad7aa32debd4014d908ccf9e2f
 
 /.QWEN.md

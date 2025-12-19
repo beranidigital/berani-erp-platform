@@ -69,9 +69,7 @@
                         :items="$groupItems"
                         :label="$groupLabel"
                         :attributes="\Filament\Support\prepare_inherited_attributes($groupExtraSidebarAttributeBag)"
-<<<<<<< HEAD
                     />
-=======
                     /> --}}
                     <ul class="fi-sidebar-group-items">
                         @foreach ($groupItems as $item)
@@ -120,7 +118,6 @@
                             </x-filament-panels::sidebar.item>
                         @endforeach
                     </ul>
->>>>>>> e0f15407b9d3b0ad7aa32debd4014d908ccf9e2f
                 @endforeach
             </ul>
 
